@@ -1,0 +1,218 @@
+<template>
+  <q-dialog
+    v-model="modal"
+    persistent
+    transition-show="scale"
+    transition-hide="scale"
+  >
+    <q-card style="width: 800px; max-width: 80vw">
+      <q-card-section class="row">
+        <div class="text-h6">
+          {{
+            !isEditar ? "Registrar partido político" : "Editar partido político"
+          }}
+        </div>
+        <q-space />
+        <q-btn
+          icon="close"
+          @click="actualizarModal(false)"
+          flat
+          round
+          dense
+          v-close-popup
+        />
+      </q-card-section>
+
+      <q-card-section>
+        <q-form class="row q-col-gutter-xs" @submit="onSubmit">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              filled
+              v-model.trim="partido.nombre"
+              label="Nombre"
+              hint="Ingrese nombre del actor politico"
+              autogrow
+              lazy-rules
+              :rules="[(val) => !!val || 'El nombre es requerido']"
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              filled
+              v-model.trim="partido.siglas"
+              label="Siglas"
+              hint="Ingrese siglas del actor politico"
+              autogrow
+              lazy-rules
+              :rules="[(val) => !!val || 'Las siglas son requeridas']"
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-file filled bottom-slots v-model="logo_URL" label="Logo" counter>
+              <template v-if="isEditar" v-slot:prepend>
+                <q-avatar>
+                  <img :src="partido.logo_URL" />
+                </q-avatar>
+              </template>
+              <template v-slot:append>
+                <q-icon
+                  name="close"
+                  @click.stop.prevent="logo_URL = null"
+                  class="cursor-pointer"
+                />
+              </template>
+
+              <template v-slot:hint> Logo </template>
+            </q-file>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <q-input
+              filled
+              v-model.number="partido.prioridad"
+              type="number"
+              label="Prioridad del actor polito"
+              hint="Ingrese la prioridad"
+              lazy-rules
+              :rules="[(val) => !!val || 'La campo prioridad es requerido']"
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <q-checkbox
+              color="pink"
+              v-model="partido.independiente"
+              label="Es independiente"
+            />
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              filled
+              v-model="partido.pantone_Letra"
+              :rules="['anyColor']"
+              hint="Ingrese el pantone letra"
+              class="my-input"
+            >
+              <template v-slot:append>
+                <q-icon name="colorize" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-color v-model="partido.pantone_Letra" />
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              filled
+              v-model="partido.pantone_Fondo"
+              :rules="['anyColor']"
+              hint="Ingrese el pantone fondo"
+              class="my-input"
+            >
+              <template v-slot:append>
+                <q-icon name="colorize" class="cursor-pointer">
+                  <q-popup-proxy
+                    cover
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-color v-model="partido.pantone_Fondo" />
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+
+          <div class="col-12 justify-end">
+            <div class="text-right q-gutter-xs">
+              <q-btn
+                label="Cancelar"
+                type="reset"
+                color="negative"
+                @click="actualizarModal(false)"
+              />
+              <q-btn
+                label="Guardar"
+                type="submit"
+                color="positive"
+                class="q-ml-sm"
+              />
+            </div>
+          </div>
+        </q-form>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+</template>
+
+<script setup>
+import { useQuasar } from "quasar";
+import { storeToRefs } from "pinia";
+import { usePartidosPoliticosStore } from "src/stores/partidos-politicos-store";
+import { ref, watch } from "vue";
+
+//-----------------------------------------------------------
+
+const $q = useQuasar();
+const partidosStore = usePartidosPoliticosStore();
+const { modal, isEditar, partido } = storeToRefs(partidosStore);
+const logo_URL = ref(null);
+
+//-----------------------------------------------------------
+
+watch(partido.value, (val) => {
+  if (val.id != null) {
+    logo_URL.value = val.logo_URL;
+  }
+});
+
+//-----------------------------------------------------------
+
+const actualizarModal = (valor) => {
+  partidosStore.actualizarModal(valor);
+  partidosStore.updateEditar(valor);
+};
+
+const onSubmit = async () => {
+  let partidoFormData = new FormData();
+  partidoFormData.append("Nombre", partido.value.nombre);
+  partidoFormData.append("Siglas", partido.value.siglas);
+  partidoFormData.append("Logo", logo_URL.value);
+  partidoFormData.append("Independiente", partido.value.independiente);
+  partidoFormData.append("Prioridad", partido.value.prioridad);
+  partidoFormData.append("Pantone_Fondo", partido.value.pantone_Fondo);
+  partidoFormData.append("Pantona_Letra", partido.value.pantone_Letra);
+
+  let resp = null;
+  $q.loading.show();
+  if (isEditar.value == true) {
+    resp = await partidosStore.updatePartdio(partido.value.id, partidoFormData);
+  } else {
+    resp = await partidosStore.createPartidoPolitico(partidoFormData);
+  }
+  if (resp.success) {
+    $q.notify({
+      position: "top-right",
+      type: "positive",
+      message: resp.data,
+    });
+    partidosStore.loadPartidosPoliticos();
+    actualizarModal(false);
+  } else {
+    $q.notify({
+      position: "top-right",
+      type: "negative",
+      message: resp.data,
+    });
+  }
+  $q.loading.hide();
+};
+</script>
+
+<style></style>
