@@ -162,21 +162,14 @@ import { ref, watch } from "vue";
 const $q = useQuasar();
 const partidosStore = usePartidosPoliticosStore();
 const { modal, isEditar, partido } = storeToRefs(partidosStore);
-const logo_URL = ref(null);
-
-//-----------------------------------------------------------
-
-watch(partido.value, (val) => {
-  if (val.id != null) {
-    logo_URL.value = val.logo_URL;
-  }
-});
+const logo_URL = ref("");
 
 //-----------------------------------------------------------
 
 const actualizarModal = (valor) => {
   partidosStore.actualizarModal(valor);
   partidosStore.updateEditar(valor);
+  partidosStore.initPartido();
 };
 
 const onSubmit = async () => {

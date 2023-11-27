@@ -25,7 +25,7 @@
 
       <q-card-section>
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
             <q-input
               filled
               v-model.trim="eleccion.nombre"
@@ -37,7 +37,7 @@
             >
             </q-input>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <q-input
               filled
               v-model.trim="eleccion.siglas"
@@ -47,6 +47,13 @@
               :rules="[(val) => !!val || 'Las siglas es requerida']"
             >
             </q-input>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <q-checkbox
+              color="pink"
+              v-model="eleccion.activo"
+              label="Activo?"
+            />
           </div>
 
           <div class="col-12 justify-end">
@@ -75,7 +82,7 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useTipoEleccionesStore } from "src/stores/tipo-elecciones";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 
 //-----------------------------------------------------------
 
@@ -92,6 +99,7 @@ onBeforeMount(() => {
 const actualizarModal = (valor) => {
   eleccionesStore.actualizarModal(valor);
   eleccionesStore.updateEditar(valor);
+  eleccionesStore.initElecciones();
 };
 
 const onSubmit = async () => {

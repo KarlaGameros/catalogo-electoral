@@ -75,7 +75,6 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useTipoCasillasStore } from "src/stores/tipo-casillas-store";
-import { ref } from "vue";
 
 //-----------------------------------------------------------
 
@@ -88,6 +87,7 @@ const { modal, isEditar, casilla } = storeToRefs(casillasStore);
 const actualizarModal = (valor) => {
   casillasStore.actualizarModal(valor);
   casillasStore.updateEditar(valor);
+  casillasStore.initCasilla();
 };
 
 const onSubmit = async () => {

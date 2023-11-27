@@ -10,11 +10,21 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
       id: null,
       nombre: null,
       siglas: null,
-      logo: null,
+      logo_URL: null,
       orden: null,
     },
   }),
   actions: {
+    //----------------------------------------------------------------------
+    //INIT COALICION
+    initCoalicion() {
+      this.coalicion.id = null;
+      this.coalicion.nombre = null;
+      this.coalicion.siglas = null;
+      this.coalicion.logo_URL = null;
+      this.coalicion.orden = null;
+    },
+
     //----------------------------------------------------------------------
     //GET ALL
     async loadCoaliciones() {
@@ -96,9 +106,9 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
 
     //----------------------------------------------------------------------
     //UPDATE COALICION
-    async updateCoalicion(coalicion) {
+    async updateCoalicion(id, coalicion) {
       try {
-        const resp = await api.put(`/Coaliciones/${coalicion.id}`, coalicion);
+        const resp = await api.put(`/Coaliciones/${id}`, coalicion);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {

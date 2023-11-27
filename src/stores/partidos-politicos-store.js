@@ -27,7 +27,7 @@ export const usePartidosPoliticosStore = defineStore(
         this.partido.nombre = null;
         this.partido.siglas = null;
         this.partido.logo_URL = null;
-        this.partido.independiente = null;
+        this.partido.independiente = false;
         this.partido.prioridad = null;
         this.partido.pantone_Fondo = null;
         this.partido.pantone_Letra = null;
@@ -65,7 +65,7 @@ export const usePartidosPoliticosStore = defineStore(
       async loadPartdio(id) {
         try {
           let resp = null;
-          resp = await api.get(`/Partidos_Politicos/By_Partidos/${id}`);
+          resp = await api.get(`/Partidos_Politicos/${id}`);
           if (resp.status == 200) {
             const { success, data } = resp.data;
             if (success == true) {

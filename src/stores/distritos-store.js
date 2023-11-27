@@ -15,6 +15,15 @@ export const useDistritosStore = defineStore("useDistritosStore", {
   }),
   actions: {
     //----------------------------------------------------------------------
+    //INIT DISTRITO
+    initDistrito() {
+      this.distrito.id = null;
+      this.distrito.no_Distrito = null;
+      this.distrito.nombre = null;
+      this.distrito.integracion = null;
+    },
+
+    //----------------------------------------------------------------------
     //GET ALL
     async loadDistritos() {
       try {
@@ -43,7 +52,7 @@ export const useDistritosStore = defineStore("useDistritosStore", {
     async loadDistrito(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Distritos/By_Distritos/${id}`);
+        resp = await api.get(`/Distritos/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {

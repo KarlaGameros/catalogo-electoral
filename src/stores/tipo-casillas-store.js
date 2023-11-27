@@ -14,6 +14,14 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
   }),
   actions: {
     //----------------------------------------------------------------------
+    //INIT CASILLAS
+    initCasilla() {
+      this.casilla.id = null;
+      this.casilla.nombre = null;
+      this.casilla.siglas = null;
+    },
+
+    //----------------------------------------------------------------------
     //GET ALL
     async loadTipoCasillas() {
       try {
@@ -40,7 +48,7 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
     async loadCasilla(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Tipos_Casillas/By_Tipo_Casilla/${id}`);
+        resp = await api.get(`/Tipos_Casillas/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {
@@ -113,7 +121,7 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
     //UPDATE CASILLA
     async updateCasilla(casilla) {
       try {
-        const resp = await api.put(`/Distritos/${casilla.id}`, casilla);
+        const resp = await api.put(`/Tipos_Casillas/${casilla.id}`, casilla);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {

@@ -11,10 +11,20 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       siglas: null,
       nombre: null,
       fecha_Registro: null,
-      activo: null,
+      activo: false,
     },
   }),
   actions: {
+    //----------------------------------------------------------------------
+    //INIT TIPO ELECCIONES
+    initElecciones() {
+      this.eleccion.id = null;
+      this.eleccion.nombre = null;
+      this.eleccion.siglas = null;
+      this.eleccion.fecha_Registro = null;
+      this.eleccion.activo = false;
+    },
+
     //----------------------------------------------------------------------
     //GET ALL
     async loadTiposEleeciones() {
@@ -44,7 +54,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     async loadTipoEleccion(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Tipos_Elecciones/By_TEleccion/${id}`);
+        resp = await api.get(`/Tipos_Elecciones/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {

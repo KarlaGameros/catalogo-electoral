@@ -17,6 +17,17 @@ export const useDemarcacionesStore = defineStore("useDemarcacionesStore", {
   }),
   actions: {
     //----------------------------------------------------------------------
+    //INIT DEMARCACION
+    initDemarcacion() {
+      this.demarcacion.id = null;
+      this.demarcacion.municipio_Id = null;
+      this.demarcacion.municipio = null;
+      this.demarcacion.nombre = null;
+      this.demarcacion.no_Demarcacion = null;
+      this.demarcacion.indigena = null;
+    },
+
+    //----------------------------------------------------------------------
     //GET ALL
     async loadDemarcaciones() {
       try {
@@ -46,7 +57,7 @@ export const useDemarcacionesStore = defineStore("useDemarcacionesStore", {
     async loadDemarcacion(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Demarcaciones/By_Demarcaciones/${id}`);
+        resp = await api.get(`/Demarcaciones/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {

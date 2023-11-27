@@ -95,7 +95,7 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useDemarcacionesStore } from "src/stores/demarcaciones-store";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watch } from "vue";
 import { useMunicipiosStore } from "src/stores/municipios-store";
 
 //-----------------------------------------------------------
@@ -107,15 +107,36 @@ const { modal, isEditar, demarcacion } = storeToRefs(demarcacionStore);
 const { list_Municipios } = storeToRefs(municipioStore);
 const municipio_Id = ref(null);
 const is_Indigena = ref(false);
+
 //-----------------------------------------------------------
 
 onBeforeMount(() => {
   municipioStore.loadMunicipios();
 });
 
+//-----------------------------------------------------------
+
+watch(demarcacion.value, (val) => {
+  if (val.id != null) {
+    cargarDemarcacion(val);
+  }
+});
+
+//-----------------------------------------------------------
+
+const cargarDemarcacion = (val) => {
+  if (municipio_Id.value == null) {
+    let municipioFiltrado = list_Municipios.value.find(
+      (x) => x.value == `${val.municipio_Id}`
+    );
+    municipio_Id.value = municipioFiltrado;
+  }
+};
+
 const actualizarModal = (valor) => {
   demarcacionStore.actualizarModal(valor);
   demarcacionStore.updateEditar(valor);
+  demarcacionStore.initDemarcacion();
 };
 
 const onSubmit = async () => {

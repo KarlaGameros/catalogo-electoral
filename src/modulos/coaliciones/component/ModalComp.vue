@@ -55,9 +55,12 @@
               label="Label"
               counter
             >
-              <template v-slot:prepend>
-                <q-icon name="cloud_upload" @click.stop.prevent />
+              <template v-if="isEditar" v-slot:prepend>
+                <q-avatar>
+                  <img :src="coalicion.logo_URL" />
+                </q-avatar>
               </template>
+
               <template v-slot:append>
                 <q-icon
                   name="close"
@@ -108,20 +111,21 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useCoalicionesStore } from "src/stores/coaliciones-store";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
 const coalicionStore = useCoalicionesStore();
 const { modal, isEditar, coalicion } = storeToRefs(coalicionStore);
-const logo_URL = ref(null);
+const logo_URL = ref();
 
 //-----------------------------------------------------------
 
 const actualizarModal = (valor) => {
   coalicionStore.actualizarModal(valor);
   coalicionStore.updateEditar(valor);
+  coalicionStore.initCoalicion();
 };
 
 const onSubmit = async () => {
@@ -134,7 +138,10 @@ const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {
-    resp = await coalicionStore.updateCoalicion(coalicionFormData);
+    resp = await coalicionStore.updateCoalicion(
+      coalicion.value.id,
+      coalicionFormData
+    );
   } else {
     resp = await coalicionStore.createCoalicion(coalicionFormData);
   }

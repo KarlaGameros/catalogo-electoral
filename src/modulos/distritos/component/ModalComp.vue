@@ -99,6 +99,7 @@ const { modal, isEditar, distrito } = storeToRefs(distritoStore);
 const actualizarModal = (valor) => {
   distritoStore.actualizarModal(valor);
   distritoStore.updateEditar(valor);
+  distritoStore.initDistrito();
 };
 
 const onSubmit = async () => {
