@@ -28,6 +28,24 @@
                 flat
                 round
                 color="pink"
+                icon="add_circle"
+                @click="agregarIntegracion(col.value)"
+              >
+                <q-tooltip>Agregar integracón</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                color="pink"
+                icon="change_circle"
+                @click="combinaciones(col.value)"
+              >
+                <q-tooltip>Combinaciones</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                color="pink"
                 icon="edit"
                 @click="editar(col.value)"
               >
@@ -140,11 +158,67 @@ const pagination = ref({
 });
 
 //-------------------------------------------------------------------
+
+const agregarIntegracion = async (id) => {
+  $q.loading.show();
+  coalicionesStore.actualizarModalIntegracion(true);
+  await coalicionesStore.loadCoalicion(id);
+  await coalicionesStore.loadIntegracionesByCoalicion(id);
+  $q.loading.hide();
+};
+
 const editar = async (id) => {
   $q.loading.show();
   await coalicionesStore.loadCoalicion(id);
   coalicionesStore.updateEditar(true);
   coalicionesStore.actualizarModal(true);
+  $q.loading.hide();
+};
+
+const combinaciones = async (id) => {
+  $q.loading.show();
+  let resp = await coalicionesStore.getCombinaciones(id);
+  if (resp == false) {
+    $q.dialog({
+      title: "No hay combinaciones de la coalición",
+      message: "¿Desea generar las combinaciones?",
+      icon: "Warning",
+      persistent: true,
+      transitionShow: "scale",
+      transitionHide: "scale",
+      ok: {
+        color: "positive",
+        label: "¡Sí!, generar",
+      },
+      cancel: {
+        color: "negative",
+        label: " No Cancelar",
+      },
+    }).onOk(async () => {
+      $q.loading.show();
+      const resp = await coalicionesStore.generarCombinaciones(id);
+      if (resp.success) {
+        $q.loading.hide();
+        $q.notify({
+          position: "top-right",
+          type: "positive",
+          message: resp.data,
+        });
+        //coalicionesStore.loadCoaliciones();
+      } else {
+        $q.loading.hide();
+        $q.notify({
+          position: "top-right",
+          type: "negative",
+          message: resp.data,
+        });
+      }
+    });
+  } else {
+    await coalicionesStore.loadCoalicion(id);
+    await coalicionesStore.getCombinaciones(id);
+    coalicionesStore.actualizarModalCombinaciones(true);
+  }
   $q.loading.hide();
 };
 

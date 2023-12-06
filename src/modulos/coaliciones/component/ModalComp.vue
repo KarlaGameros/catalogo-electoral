@@ -28,7 +28,7 @@
               filled
               v-model.trim="coalicion.nombre"
               label="Nombre"
-              hint="Ingrese nombre del actor politico"
+              hint="Ingrese nombre del actor político"
               autogrow
               lazy-rules
               :rules="[(val) => !!val || 'El nombre es requerido']"
@@ -51,8 +51,8 @@
             <q-file
               filled
               bottom-slots
-              v-model="logo_URL"
-              label="Label"
+              v-model="coalicion.logo_URL"
+              label="Logo"
               counter
             >
               <template v-if="isEditar" v-slot:prepend>
@@ -64,7 +64,7 @@
               <template v-slot:append>
                 <q-icon
                   name="close"
-                  @click.stop.prevent="logo_URL = null"
+                  @click.stop.prevent="coalicion.logo_URL = null"
                   class="cursor-pointer"
                 />
               </template>
@@ -111,14 +111,12 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useCoalicionesStore } from "src/stores/coaliciones-store";
-import { ref, watch } from "vue";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
 const coalicionStore = useCoalicionesStore();
 const { modal, isEditar, coalicion } = storeToRefs(coalicionStore);
-const logo_URL = ref();
 
 //-----------------------------------------------------------
 
@@ -132,7 +130,7 @@ const onSubmit = async () => {
   let coalicionFormData = new FormData();
   coalicionFormData.append("Nombre", coalicion.value.nombre);
   coalicionFormData.append("Siglas", coalicion.value.siglas);
-  coalicionFormData.append("Logo", logo_URL.value);
+  coalicionFormData.append("Logo", coalicion.value.logo_URL);
   coalicionFormData.append("Orden", coalicion.value.orden);
 
   let resp = null;

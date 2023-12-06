@@ -25,6 +25,8 @@
     </div>
     <TablaComp />
     <ModalComp />
+    <ModalIntegracionComp />
+    <ModalCombinaciones />
   </q-page>
 </template>
 <script setup>
@@ -32,7 +34,8 @@ import { useQuasar } from "quasar";
 import { useCoalicionesStore } from "src/stores/coaliciones-store";
 import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
-
+import ModalIntegracionComp from "../component/ModalIntegracionComp.vue";
+import ModalCombinaciones from "../component/ModalCombinaciones.vue";
 //--------------------------------------------------------------------
 const $q = useQuasar();
 const coalicionStore = useCoalicionesStore();

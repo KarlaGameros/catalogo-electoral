@@ -41,6 +41,8 @@ export const usePartidosPoliticosStore = defineStore(
           let { data } = resp.data;
           let listPartidosPoliticos = data.map((partido) => {
             return {
+              value: partido.id,
+              label: `${partido.siglas}-${partido.nombre}`,
               id: partido.id,
               nombre: partido.nombre,
               siglas: partido.siglas,

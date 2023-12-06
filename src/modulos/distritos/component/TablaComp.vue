@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
+      :grid="$q.screen.xs"
       :rows="list_Distritos"
       :columns="columns"
       row-key="name"
@@ -20,7 +21,42 @@
           </template>
         </q-input>
       </template>
-      <template v-slot:body="props">
+      <template v-if="$q.screen.xs" v-slot:item="props">
+        <div
+          class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
+        >
+          <q-card bordered class="no-shadow">
+            <q-item>
+              <q-item-section>
+                <q-item-label class="text-grey-8 text-weight-bold">
+                  Número de distrito: {{ props.row.no_Distrito }}
+                </q-item-label>
+                <q-item-label class="text-grey-8 text-weight-bold">
+                  Nombre: {{ props.row.nombre }}
+                </q-item-label>
+                <q-item-label class="text-grey-8 text-weight-bold">
+                  Integración: {{ props.row.integracion }}
+                </q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-item-label>
+                  <q-btn
+                    flat
+                    round
+                    color="pink-5"
+                    icon="edit_square"
+                    @click="editar(props.row.id)"
+                  >
+                    <q-tooltip>Editar información</q-tooltip>
+                  </q-btn>
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-separator></q-separator>
+          </q-card>
+        </div>
+      </template>
+      <template v-else v-slot:body="props">
         <q-tr :props="props">
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">

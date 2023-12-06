@@ -82,7 +82,7 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useTipoEleccionesStore } from "src/stores/tipo-elecciones";
-import { onBeforeMount, ref, watch } from "vue";
+import { onBeforeMount } from "vue";
 
 //-----------------------------------------------------------
 

@@ -30,7 +30,7 @@
               filled
               v-model.trim="partido.nombre"
               label="Nombre"
-              hint="Ingrese nombre del actor politico"
+              hint="Ingrese nombre del actor político"
               autogrow
               lazy-rules
               :rules="[(val) => !!val || 'El nombre es requerido']"
@@ -42,7 +42,7 @@
               filled
               v-model.trim="partido.siglas"
               label="Siglas"
-              hint="Ingrese siglas del actor politico"
+              hint="Ingrese siglas del actor político"
               autogrow
               lazy-rules
               :rules="[(val) => !!val || 'Las siglas son requeridas']"
@@ -50,7 +50,13 @@
             </q-input>
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <q-file filled bottom-slots v-model="logo_URL" label="Logo" counter>
+            <q-file
+              filled
+              bottom-slots
+              v-model="partido.logo_URL"
+              label="Logo"
+              counter
+            >
               <template v-if="isEditar" v-slot:prepend>
                 <q-avatar>
                   <img :src="partido.logo_URL" />
@@ -59,7 +65,7 @@
               <template v-slot:append>
                 <q-icon
                   name="close"
-                  @click.stop.prevent="logo_URL = null"
+                  @click.stop.prevent="partido.logo_URL = null"
                   class="cursor-pointer"
                 />
               </template>
@@ -72,10 +78,10 @@
               filled
               v-model.number="partido.prioridad"
               type="number"
-              label="Prioridad del actor polito"
+              label="Prioridad"
               hint="Ingrese la prioridad"
               lazy-rules
-              :rules="[(val) => !!val || 'La campo prioridad es requerido']"
+              :rules="[(val) => !!val || 'La campo es requerido']"
             >
             </q-input>
           </div>
@@ -155,14 +161,12 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { usePartidosPoliticosStore } from "src/stores/partidos-politicos-store";
-import { ref, watch } from "vue";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
 const partidosStore = usePartidosPoliticosStore();
 const { modal, isEditar, partido } = storeToRefs(partidosStore);
-const logo_URL = ref("");
 
 //-----------------------------------------------------------
 
@@ -176,7 +180,7 @@ const onSubmit = async () => {
   let partidoFormData = new FormData();
   partidoFormData.append("Nombre", partido.value.nombre);
   partidoFormData.append("Siglas", partido.value.siglas);
-  partidoFormData.append("Logo", logo_URL.value);
+  partidoFormData.append("Logo", partido.value.logo_URL);
   partidoFormData.append("Independiente", partido.value.independiente);
   partidoFormData.append("Prioridad", partido.value.prioridad);
   partidoFormData.append("Pantone_Fondo", partido.value.pantone_Fondo);
