@@ -1,40 +1,63 @@
 import { defineStore } from "pinia";
 import { api } from "src/boot/axios";
 
-export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
+export const useSeccionesStore = defineStore("useSeccionesStore", {
   state: () => ({
     modal: false,
     isEditar: false,
-    list_Tipo_Casillas: [],
-    casilla: {
+    list_Secciones: [],
+    seccion: {
       id: null,
+      distrito_Id: null,
+      municipio_Id: null,
+      demarcacion_Id: null,
       nombre: null,
-      siglas: null,
+      cabecera_Localidad: null,
+      padron_Electoral: null,
+      listado_Nominal: null,
+      tipo_Seccion: null,
     },
   }),
   actions: {
     //----------------------------------------------------------------------
-    //INIT CASILLAS
-    initCasilla() {
-      this.casilla.id = null;
-      this.casilla.nombre = null;
-      this.casilla.siglas = null;
+    //INIT SECCION
+    initSeccion() {
+      this.seccion.id = null;
+      this.seccion.distrito_Id = null;
+      this.seccion.municipio_Id = null;
+      this.seccion.demarcacion_Id = null;
+      this.seccion.nombre = null;
+      this.seccion.cabecera_Localidad = null;
+      this.seccion.padron_Electoral = null;
+      this.seccion.listado_Nominal = null;
+      this.seccion.tipo_Seccion = null;
     },
 
     //----------------------------------------------------------------------
     //GET ALL
-    async loadTipoCasillas() {
+    async loadSecciones() {
       try {
-        let resp = await api.get("/Tipos_Casillas");
+        let resp = await api.get("/Secciones");
         let { data } = resp.data;
-        let listTipoCasillas = data.map((casilla) => {
+        let listSecciones = data.map((casilla) => {
           return {
             id: casilla.id,
+            distrito_Id: casilla.distrito_Id,
+            distrito: casilla.distrito,
+            municipio_Id: casilla.municipio_Id,
+            municipio: casilla.municipio,
+            demarcacion_Id: casilla.demarcacion_Id,
+            demarcacion: casilla.demarcacion,
             nombre: casilla.nombre,
-            siglas: casilla.siglas,
+            cabecera_Localidad: casilla.cabecera_Localidad,
+            padron_Electoral: casilla.padron_Electoral,
+            listado_Nominal: casilla.listado_Nominal,
+            tipo_Seccion: casilla.tipo_Seccion,
+            value: casilla.id,
+            label: casilla.nombre,
           };
         });
-        this.list_Tipo_Casillas = listTipoCasillas;
+        this.list_Secciones = listSecciones;
       } catch (error) {
         return {
           success: false,
@@ -44,17 +67,23 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
     },
 
     //----------------------------------------------------------------------
-    //GET CASILLA
-    async loadCasilla(id) {
+    //GET SECCION
+    async loadSeccion(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Tipos_Casillas/${id}`);
+        resp = await api.get(`/Secciones/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {
-            this.casilla.id = data.id;
-            this.casilla.siglas = data.siglas;
-            this.casilla.nombre = data.nombre;
+            this.seccion.id = data.id;
+            this.seccion.distrito_Id = data.distrito_Id;
+            this.seccion.municipio_Id = data.municipio_Id;
+            this.seccion.demarcacion_Id = data.demarcacion_Id;
+            this.seccion.nombre = data.nombre;
+            this.seccion.cabecera_Localidad = data.cabecera_Localidad;
+            this.seccion.padron_Electoral = data.padron_Electoral;
+            this.seccion.listado_Nominal = data.listado_Nominal;
+            this.seccion.tipo_Seccion = data.tipo_Seccion;
           }
         }
       } catch (error) {
@@ -66,10 +95,10 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
     },
 
     //----------------------------------------------------------------------
-    //CREATE CASILLA
-    async createCasilla(casilla) {
+    //CREATE SECCION
+    async createSeccion(seccion) {
       try {
-        const resp = await api.post("/Tipos_Casillas", casilla);
+        const resp = await api.post("/Secciones", seccion);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {
@@ -92,10 +121,10 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
     },
 
     //----------------------------------------------------------------------
-    //DELETE CASILLA
+    //DELETE SECCION
     async deleteCasilla(id) {
       try {
-        const resp = await api.delete(`/Tipos_Casillas/${id}`);
+        const resp = await api.delete(`/Secciones/${id}`);
         if (resp.status == 200) {
           let { success, data } = resp.data;
           if (success === true) {
@@ -118,10 +147,10 @@ export const useTipoCasillasStore = defineStore("useTipoCasillasStore", {
     },
 
     //----------------------------------------------------------------------
-    //UPDATE CASILLA
-    async updateCasilla(casilla) {
+    //UPDATE SECCION
+    async updateSeccion(seccion) {
       try {
-        const resp = await api.put(`/Tipos_Casillas/${casilla.id}`, casilla);
+        const resp = await api.put(`/Secciones/${seccion.id}`, seccion);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {

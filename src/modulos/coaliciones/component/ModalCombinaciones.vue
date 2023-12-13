@@ -149,10 +149,45 @@ const pagination = ref({
 
 const combinaciones = async (id) => {
   $q.loading.show();
-  let resp = await coalicionStore.generarCombinaciones(id);
-  if (resp.success === true) {
-    await coalicionStore.loadCoalicion(id);
-  }
+
+  $q.dialog({
+    title: "¿Está seguro de generar las combinaciones?",
+    message: "Se borrarán las anteriores",
+    icon: "Warning",
+    persistent: true,
+    transitionShow: "scale",
+    transitionHide: "scale",
+    ok: {
+      color: "positive",
+      label: "¡Sí!, generar",
+    },
+    cancel: {
+      color: "negative",
+      label: " No Cancelar",
+    },
+  }).onOk(async () => {
+    $q.loading.show();
+    let resp = await coalicionStore.generarCombinaciones(id);
+
+    if (resp.success) {
+      $q.loading.hide();
+      $q.notify({
+        position: "top-right",
+        type: "positive",
+        message: resp.data,
+      });
+      coalicionStore.getCombinaciones(id);
+      //coalicionesStore.loadCoaliciones();
+    } else {
+      $q.loading.hide();
+      $q.notify({
+        position: "top-right",
+        type: "negative",
+        message: resp.data,
+      });
+    }
+  });
+
   $q.loading.hide();
 };
 </script>

@@ -4,6 +4,7 @@ import { api } from "src/boot/axios";
 export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
   state: () => ({
     modal: false,
+    modalRequisitos: false,
     isEditar: false,
     list_Tipos_Elecciones: [],
     eleccion: {
@@ -11,6 +12,14 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       siglas: null,
       nombre: null,
       fecha_Registro: null,
+      activo: false,
+    },
+    list_Requisitos: [],
+    requisistos: {
+      tipo_Eleccion_Id: null,
+      nombre: null,
+      archivo: false,
+      genero: false,
       activo: false,
     },
   }),
@@ -155,12 +164,69 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
+    //CREATE REQUISITOS
+    async createRequisitos(requisisto) {
+      try {
+        const resp = await api.post(
+          "/Tipos_Eleccion_Requerimientos",
+          requisisto
+        );
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //GET REQUISITOS
+    async loadRequisitos(id) {
+      try {
+        let resp = await api.get(`/Tipos_Eleccion_Requerimientos/${id}`);
+        let { data } = resp.data;
+        let listRequisitos = data.map((requisito) => {
+          return {
+            id: requisito.id,
+            nombre: requisito.nombre,
+            genero: requisito.genero,
+            activo: requisito.activo,
+            archivo: requisito.archivo,
+          };
+        });
+        this.list_Requisitos = listRequisitos;
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
     actualizarModal(valor) {
       this.modal = valor;
     },
 
     updateEditar(valor) {
       this.isEditar = valor;
+    },
+
+    actualizarModalRequisitos(valor) {
+      this.modalRequisitos = valor;
     },
   },
 });

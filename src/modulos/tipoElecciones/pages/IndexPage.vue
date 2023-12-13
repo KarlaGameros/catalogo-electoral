@@ -25,6 +25,7 @@
     </div>
     <TablaComp />
     <ModalComp />
+    <ModalRequisitos />
   </q-page>
 </template>
 <script setup>
@@ -32,6 +33,8 @@ import { useQuasar } from "quasar";
 import { useTipoEleccionesStore } from "src/stores/tipo-elecciones";
 import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
+import ModalRequisitos from "../component/ModalRequisitos.vue";
+
 //--------------------------------------------------------------------
 
 const $q = useQuasar();

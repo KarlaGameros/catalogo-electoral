@@ -28,7 +28,7 @@
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
               filled
-              v-model.trim="casilla.nombre"
+              v-model.trim="tipo_casilla.nombre"
               label="Nombre"
               hint="Ingrese nombre del tipo de casilla"
               autogrow
@@ -40,7 +40,7 @@
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
               filled
-              v-model.trim="casilla.siglas"
+              v-model.trim="tipo_casilla.siglas"
               label="Siglas"
               hint="Ingrese las siglas del tipo de casilla"
               autogrow
@@ -74,13 +74,13 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
-import { useTipoCasillasStore } from "src/stores/tipo-casillas-store";
+import { useCasillasStore } from "src/stores/casillas-store";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
-const casillasStore = useTipoCasillasStore();
-const { modal, isEditar, casilla } = storeToRefs(casillasStore);
+const casillasStore = useCasillasStore();
+const { modal, isEditar, tipo_casilla } = storeToRefs(casillasStore);
 
 //-----------------------------------------------------------
 
@@ -94,9 +94,9 @@ const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {
-    resp = await casillasStore.updateCasilla(casilla.value);
+    resp = await casillasStore.updateTipoCasilla(tipo_casilla.value);
   } else {
-    resp = await casillasStore.createCasilla(casilla.value);
+    resp = await casillasStore.createTipoCasilla(tipo_casilla.value);
   }
   if (resp.success) {
     $q.notify({

@@ -1,7 +1,7 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pt-lg">
     <q-table
-      :rows="list_Municipios"
+      :rows="list_Requisitos"
       :columns="columns"
       row-key="name"
       :pagination="pagination"
@@ -23,7 +23,9 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
-            <label>{{ col.value }}</label>
+            <div v-if="col.name === 'id'"></div>
+
+            <label v-else>{{ col.value }}</label>
           </q-td>
         </q-tr>
       </template>
@@ -33,42 +35,58 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
+import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
-import { useMunicipiosStore } from "../../../stores/municipios-store";
+import { useTipoEleccionesStore } from "../../../stores/tipo-elecciones";
 
 //-------------------------------------------------------------------
 
-const municipioStore = useMunicipiosStore();
-const { list_Municipios } = storeToRefs(municipioStore);
+const $q = useQuasar();
+const eleccionesStore = useTipoEleccionesStore();
+const { list_Requisitos } = storeToRefs(eleccionesStore);
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
-  municipioStore.loadMunicipios();
+  eleccionesStore.loadTiposEleeciones();
 });
 
 //-------------------------------------------------------------------
 
 const columns = [
   {
-    name: "estado",
-    align: "center",
-    label: "Estado",
-    field: "estado",
-    sortable: true,
-  },
-  {
-    name: "clave",
-    align: "center",
-    label: "Clave",
-    field: "clave",
-    sortable: true,
-  },
-  {
     name: "nombre",
     align: "center",
     label: "Nombre",
     field: "nombre",
+    sortable: true,
+  },
+  {
+    name: "archivo",
+    align: "center",
+    label: "Archivo",
+    field: "archivo",
+    sortable: true,
+  },
+  {
+    name: "genero",
+    align: "center",
+    label: "Género",
+    field: "genero",
+    sortable: true,
+  },
+  {
+    name: "activo",
+    align: "center",
+    label: "Activo",
+    field: "activo",
+    sortable: true,
+  },
+  {
+    name: "id",
+    align: "center",
+    label: "Acciones",
+    field: "id",
     sortable: true,
   },
 ];
@@ -81,6 +99,8 @@ const pagination = ref({
   page: 1,
   rowsPerPage: 5,
 });
+
+//-------------------------------------------------------------------
 </script>
 
 <style></style>

@@ -53,9 +53,10 @@
             <q-file
               filled
               bottom-slots
-              v-model="partido.logo_URL"
+              v-model="logo_URL"
               label="Logo"
               counter
+              accept=".jpg, image/*"
             >
               <template v-if="isEditar" v-slot:prepend>
                 <q-avatar>
@@ -161,15 +162,16 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { usePartidosPoliticosStore } from "src/stores/partidos-politicos-store";
+import { ref, watch } from "vue";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
 const partidosStore = usePartidosPoliticosStore();
 const { modal, isEditar, partido } = storeToRefs(partidosStore);
+const logo_URL = ref(null);
 
 //-----------------------------------------------------------
-
 const actualizarModal = (valor) => {
   partidosStore.actualizarModal(valor);
   partidosStore.updateEditar(valor);
@@ -180,7 +182,7 @@ const onSubmit = async () => {
   let partidoFormData = new FormData();
   partidoFormData.append("Nombre", partido.value.nombre);
   partidoFormData.append("Siglas", partido.value.siglas);
-  partidoFormData.append("Logo", partido.value.logo_URL);
+  partidoFormData.append("Logo", logo_URL.value);
   partidoFormData.append("Independiente", partido.value.independiente);
   partidoFormData.append("Prioridad", partido.value.prioridad);
   partidoFormData.append("Pantone_Fondo", partido.value.pantone_Fondo);

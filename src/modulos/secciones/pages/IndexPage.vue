@@ -5,7 +5,7 @@
         <div class="q-gutter-sm">
           <q-breadcrumbs>
             <q-breadcrumbs-el icon="home" to="/" />
-            <q-breadcrumbs-el icon="list_alt" label="Tipo de casillas" />
+            <q-breadcrumbs-el icon="list_alt" label="Secciones" />
           </q-breadcrumbs>
         </div>
       </div>
@@ -28,21 +28,18 @@
   </q-page>
 </template>
 <script setup>
-import { useQuasar } from "quasar";
-import { useCasillasStore } from "src/stores/casillas-store";
+import { useSeccionesStore } from "src/stores/secciones-store";
 import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
+import { useQuasar } from "quasar";
 
 //--------------------------------------------------------------------
-
 const $q = useQuasar();
-const casillasStore = useCasillasStore();
-
-//--------------------------------------------------------------------
+const seccionesStore = useSeccionesStore();
 
 const actualizarModal = (valor) => {
   $q.loading.show();
-  casillasStore.actualizarModal(valor);
+  seccionesStore.actualizarModal(valor);
   $q.loading.hide();
 };
 </script>

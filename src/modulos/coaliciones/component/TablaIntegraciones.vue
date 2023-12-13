@@ -46,7 +46,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import { useCoalicionesStore } from "../../../stores/coaliciones-store";
 
 //-------------------------------------------------------------------

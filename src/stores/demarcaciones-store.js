@@ -41,6 +41,8 @@ export const useDemarcacionesStore = defineStore("useDemarcacionesStore", {
             nombre: demarcacion.nombre,
             no_Demarcacion: demarcacion.no_Demarcacion,
             indigena: demarcacion.indigena,
+            label: demarcacion.nombre,
+            value: demarcacion.id,
           };
         });
         this.list_Demarcaciones = listDemarcaciones;

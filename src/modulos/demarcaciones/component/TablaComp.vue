@@ -105,7 +105,7 @@ const columns = [
   {
     name: "indigena",
     align: "center",
-    label: "Indigena",
+    label: "Indígena",
     field: "indigena",
     sortable: true,
   },

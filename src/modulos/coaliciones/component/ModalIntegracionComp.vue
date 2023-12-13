@@ -19,12 +19,9 @@
           dense
           v-close-popup
         />
-        <div
-          class="col-12 bg-blue-grey-4"
-          style="border-radius: 5px; width: 1100px"
-        >
+        <div class="col-12 bg-pink-8" style="border-radius: 5px; width: 1100px">
           <div class="text-h6 text-center text-white">
-            <q-avatar>
+            <q-avatar rounded>
               <img :src="coalicion.logo_URL" alt="" />
             </q-avatar>
             {{ coalicion.nombre }}
@@ -86,7 +83,7 @@ import TablaIntegraciones from "../component/TablaIntegraciones.vue";
 const $q = useQuasar();
 const coalicionStore = useCoalicionesStore();
 const partidosPoliticosStore = usePartidosPoliticosStore();
-const { modalIntegracion, integracion, coalicion, isEditar } =
+const { modalIntegracion, integracion, coalicion, isEditar, list_Integracion } =
   storeToRefs(coalicionStore);
 const { list_Partidos_Politicos } = storeToRefs(partidosPoliticosStore);
 const partido_Id = ref(null);
@@ -105,30 +102,42 @@ const onSubmit = async () => {
   let resp = null;
   integracion.value.partido_Id = partido_Id.value.value;
   $q.loading.show();
-  if (isEditar.value == true) {
-  } else {
+  let filtro = list_Integracion.value.find(
+    (x) => x.partido_Id == partido_Id.value.value
+  );
+  if (filtro == undefined) {
     resp = await coalicionStore.createIntegracion(
       coalicion.value.id,
       integracion.value
     );
-  }
-  if (resp.success) {
-    $q.notify({
-      position: "top-right",
-      type: "positive",
-      message: resp.data,
-    });
-    coalicionStore.loadCoaliciones();
-    coalicionStore.loadIntegracionesByCoalicion(coalicion.value.id);
-    partido_Id.value = null;
-    //actualizarModal(false);
+    if (resp.success) {
+      $q.notify({
+        position: "top-right",
+        type: "positive",
+        message: resp.data,
+      });
+      coalicionStore.loadCoaliciones();
+      coalicionStore.loadIntegracionesByCoalicion(coalicion.value.id);
+      partido_Id.value = null;
+      //actualizarModal(false);
+    } else {
+      $q.notify({
+        position: "top-right",
+        type: "negative",
+        message: resp.data,
+      });
+    }
   } else {
-    $q.notify({
-      position: "top-right",
-      type: "negative",
-      message: resp.data,
+    $q.dialog({
+      title: "Atención",
+      message: "El partido ya se agrego",
+      icon: "Warning",
+      persistent: true,
+      transitionShow: "scale",
+      transitionHide: "scale",
     });
   }
+
   $q.loading.hide();
 };
 </script>

@@ -40,10 +40,10 @@
               filled
               v-model.number="distrito.no_Distrito"
               type="number"
-              label="Numero del distrito"
-              hint="Ingrese numero del distrito"
+              label="Número del distrito"
+              hint="Ingrese número del distrito"
               lazy-rules
-              :rules="[(val) => !!val || 'El numero de distrito es requerido']"
+              :rules="[(val) => !!val || 'El número de distrito es requerido']"
             >
             </q-input>
           </div>
@@ -51,11 +51,11 @@
             <q-input
               filled
               v-model.trim="distrito.integracion"
-              label="Integracion del distrito"
-              hint="Ingrese integracion del distrito"
+              label="Integración del distrito"
+              hint="Ingrese integración del distrito"
               autogrow
               lazy-rules
-              :rules="[(val) => !!val || 'La integracion es requerida']"
+              :rules="[(val) => !!val || 'La integración es requerida']"
             >
             </q-input>
           </div>

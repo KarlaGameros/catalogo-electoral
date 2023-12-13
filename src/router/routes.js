@@ -35,9 +35,19 @@ const routes = [
         component: () => import("../modulos/tipoCasillas/pages/IndexPage"),
       },
       {
+        path: "/casillas",
+        name: "casillas",
+        component: () => import("../modulos/casillas/pages/IndexPage"),
+      },
+      {
         path: "/tipo_elecciones",
         name: "tipo_elecciones",
         component: () => import("../modulos/tipoElecciones/pages/IndexPage"),
+      },
+      {
+        path: "/secciones",
+        name: "secciones",
+        component: () => import("../modulos/secciones/pages/IndexPage"),
       },
     ],
   },

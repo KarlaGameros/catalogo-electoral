@@ -59,36 +59,6 @@
             >
             </q-input>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <q-input
-              filled
-              v-model="date"
-              mask="date"
-              :rules="['date']"
-              hint="Fecha de registro"
-            >
-              <template v-slot:append>
-                <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date v-model="date">
-                      <div class="row items-center justify-end">
-                        <q-btn
-                          v-close-popup
-                          label="Close"
-                          color="primary"
-                          flat
-                        />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-icon>
-              </template>
-            </q-input>
-          </div>
 
           <div class="col-12 justify-end">
             <div class="text-right q-gutter-xs">

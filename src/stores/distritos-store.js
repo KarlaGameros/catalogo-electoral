@@ -35,6 +35,7 @@ export const useDistritosStore = defineStore("useDistritosStore", {
             no_Distrito: distrito.no_Distrito,
             nombre: distrito.nombre,
             integracion: distrito.integracion,
+            value: distrito.id,
             label: `${distrito.no_Distrito} - ${distrito.nombre}`,
           };
         });

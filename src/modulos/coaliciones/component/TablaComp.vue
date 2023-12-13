@@ -25,6 +25,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -34,6 +35,7 @@
                 <q-tooltip>Agregar integracón</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -43,6 +45,7 @@
                 <q-tooltip>Combinaciones</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -52,6 +55,7 @@
                 <q-tooltip>Editar coalición</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -86,6 +90,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
+import { useAuthStore } from "src/stores/auth-store";
 import { onBeforeMount, ref } from "vue";
 import { useCoalicionesStore } from "../../../stores/coaliciones-store";
 
@@ -93,6 +98,8 @@ import { useCoalicionesStore } from "../../../stores/coaliciones-store";
 
 const $q = useQuasar();
 const coalicionesStore = useCoalicionesStore();
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
 const { list_Coaliciones } = storeToRefs(coalicionesStore);
 
 //-------------------------------------------------------------------
@@ -214,11 +221,9 @@ const combinaciones = async (id) => {
         });
       }
     });
-  } else {
-    await coalicionesStore.loadCoalicion(id);
-    await coalicionesStore.getCombinaciones(id);
-    coalicionesStore.actualizarModalCombinaciones(true);
   }
+  await coalicionesStore.loadCoalicion(id);
+  coalicionesStore.actualizarModalCombinaciones(true);
   $q.loading.hide();
 };
 

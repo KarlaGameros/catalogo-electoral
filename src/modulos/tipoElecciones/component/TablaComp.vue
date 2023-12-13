@@ -28,6 +28,15 @@
                 flat
                 round
                 color="pink"
+                icon="checklist"
+                @click="addRequisitos(col.value)"
+              >
+                <q-tooltip>Requisitos de la elección</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                color="pink"
                 icon="edit"
                 @click="editar(col.value)"
               >
@@ -128,6 +137,13 @@ const pagination = ref({
 });
 
 //-------------------------------------------------------------------
+
+const addRequisitos = async (id) => {
+  $q.loading.show();
+  eleccionesStore.actualizarModalRequisitos(true);
+  await eleccionesStore.loadTipoEleccion(id);
+  $q.loading.hide();
+};
 
 const editar = async (id) => {
   $q.loading.show();

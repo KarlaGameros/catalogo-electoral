@@ -51,9 +51,10 @@
             <q-file
               filled
               bottom-slots
-              v-model="coalicion.logo_URL"
+              v-model="logo_URL"
               label="Logo"
               counter
+              accept=".jpg, image/*"
             >
               <template v-if="isEditar" v-slot:prepend>
                 <q-avatar>
@@ -111,12 +112,14 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useCoalicionesStore } from "src/stores/coaliciones-store";
+import { ref } from "vue";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
 const coalicionStore = useCoalicionesStore();
 const { modal, isEditar, coalicion } = storeToRefs(coalicionStore);
+const logo_URL = ref(null);
 
 //-----------------------------------------------------------
 
@@ -130,7 +133,7 @@ const onSubmit = async () => {
   let coalicionFormData = new FormData();
   coalicionFormData.append("Nombre", coalicion.value.nombre);
   coalicionFormData.append("Siglas", coalicion.value.siglas);
-  coalicionFormData.append("Logo", coalicion.value.logo_URL);
+  coalicionFormData.append("Logo", logo_URL.value);
   coalicionFormData.append("Orden", coalicion.value.orden);
 
   let resp = null;

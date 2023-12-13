@@ -204,6 +204,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
             coalicion_Id: partido.coalicion_Id,
             coalicion: partido.coalicion,
             partido: partido.partido,
+            partido_Id: partido.partido_Id,
           };
         });
         this.list_Integracion = listIntegracion;

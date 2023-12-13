@@ -39,8 +39,8 @@
             <q-input
               filled
               v-model.trim="demarcacion.nombre"
-              label="Nombre de la demarcacion"
-              hint="Ingrese nombre de la demarcacion"
+              label="Nombre de la demarcación"
+              hint="Ingrese nombre de la demarcación"
               autogrow
               lazy-rules
               :rules="[(val) => !!val || 'El nombre es requerido']"
@@ -52,11 +52,11 @@
               filled
               v-model.number="demarcacion.no_Demarcacion"
               type="number"
-              label="Numero de demarcacion"
-              hint="Ingrese numero de demarcacion"
+              label="Número de demarcación"
+              hint="Ingrese número de demarcación"
               lazy-rules
               :rules="[
-                (val) => !!val || 'El numero de demarcacion es requerida',
+                (val) => !!val || 'El número de demarcación es requerida',
               ]"
             >
             </q-input>
@@ -65,7 +65,7 @@
             <q-checkbox
               color="pink"
               v-model="is_Indigena"
-              label="Es indigena"
+              label="Es indígena"
             />
           </div>
 
@@ -118,13 +118,13 @@ onBeforeMount(() => {
 
 watch(demarcacion.value, (val) => {
   if (val.id != null) {
-    cargarDemarcacion(val);
+    cargarMunicipio(val);
   }
 });
 
 //-----------------------------------------------------------
 
-const cargarDemarcacion = (val) => {
+const cargarMunicipio = (val) => {
   if (municipio_Id.value == null) {
     let municipioFiltrado = list_Municipios.value.find(
       (x) => x.value == `${val.municipio_Id}`
