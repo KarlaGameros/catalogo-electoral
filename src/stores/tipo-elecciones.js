@@ -208,6 +208,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
           };
         });
         this.list_Requisitos = listRequisitos;
+        console.log(this.list_Requisitos);
       } catch (error) {
         return {
           success: false,

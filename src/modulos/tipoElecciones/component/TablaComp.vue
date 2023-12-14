@@ -142,6 +142,7 @@ const addRequisitos = async (id) => {
   $q.loading.show();
   eleccionesStore.actualizarModalRequisitos(true);
   await eleccionesStore.loadTipoEleccion(id);
+  await eleccionesStore.loadRequisitos(id);
   $q.loading.hide();
 };
 
