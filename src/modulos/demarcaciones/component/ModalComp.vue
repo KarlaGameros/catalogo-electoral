@@ -25,7 +25,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model.trim="municipio_Id"
               :options="list_Municipios"
               label="Seleccione un municipio"
@@ -37,7 +36,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="demarcacion.nombre"
               label="Nombre de la demarcación"
               hint="Ingrese nombre de la demarcación"
@@ -49,7 +47,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.number="demarcacion.no_Demarcacion"
               type="number"
               label="Número de demarcación"

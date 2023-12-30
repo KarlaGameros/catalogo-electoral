@@ -17,7 +17,6 @@ export const useAuthStore = defineStore("auth", {
         const resp = await api.get(`/SistemasUsuarios/ByUSuario`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
-          console.log("data", data);
           if (success === true) {
             if (data) {
               const sistemasArray = data.map((sistema) => {
@@ -80,7 +79,6 @@ export const useAuthStore = defineStore("auth", {
         );
         if (resp.status == 200) {
           const { success, data } = resp.data;
-          console.log("---", data);
           if (success === true) {
             if (data) {
               const modulosArray = data.map((modulo) => {

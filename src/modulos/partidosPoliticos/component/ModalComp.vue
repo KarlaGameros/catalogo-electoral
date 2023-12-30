@@ -27,7 +27,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="partido.nombre"
               label="Nombre"
               hint="Ingrese nombre del actor político"
@@ -39,7 +38,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="partido.siglas"
               label="Siglas"
               hint="Ingrese siglas del actor político"
@@ -51,7 +49,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-file
-              filled
               bottom-slots
               v-model="logo_URL"
               label="Logo"
@@ -76,7 +73,6 @@
           </div>
           <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.number="partido.prioridad"
               type="number"
               label="Prioridad"
@@ -95,7 +91,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model="partido.pantone_Letra"
               :rules="['anyColor']"
               hint="Ingrese el pantone letra"
@@ -116,7 +111,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model="partido.pantone_Fondo"
               :rules="['anyColor']"
               hint="Ingrese el pantone fondo"

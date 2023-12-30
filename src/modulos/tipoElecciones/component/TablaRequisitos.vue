@@ -23,8 +23,43 @@
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
-            <div v-if="col.name === 'id'"></div>
-
+            <div v-if="col.name === 'archivo'">
+              <q-btn
+                flat
+                round
+                :color="props.row.archivo == true ? 'green' : 'red'"
+                :icon="props.row.archivo == true ? 'done' : 'close'"
+              >
+              </q-btn>
+            </div>
+            <div v-else-if="col.name === 'genero'">
+              <q-btn
+                flat
+                round
+                :color="props.row.genero == true ? 'green' : 'red'"
+                :icon="props.row.genero == true ? 'done' : 'close'"
+              >
+              </q-btn>
+            </div>
+            <div v-else-if="col.name === 'activo'">
+              <q-btn
+                flat
+                round
+                :color="props.row.activo == true ? 'green' : 'red'"
+                :icon="props.row.activo == true ? 'done' : 'close'"
+              >
+              </q-btn>
+            </div>
+            <div v-else-if="col.name === 'id'">
+              <q-btn
+                @click="editar(col.value)"
+                flat
+                round
+                color="pink"
+                icon="edit"
+              >
+              </q-btn>
+            </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
         </q-tr>
@@ -99,6 +134,13 @@ const pagination = ref({
   page: 1,
   rowsPerPage: 5,
 });
+
+const editar = async (id) => {
+  $q.loading.show();
+  await eleccionesStore.loadRequisitos(id);
+  //await eleccionesStore.updateRequisitosEleccion(id);
+  $q.loading.hide();
+};
 
 //-------------------------------------------------------------------
 </script>

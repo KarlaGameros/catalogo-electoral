@@ -208,7 +208,35 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
           };
         });
         this.list_Requisitos = listRequisitos;
-        console.log(this.list_Requisitos);
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //UPDATE REQUISITOS ELECCION
+    async updateRequisitosEleccion(id, eleccion) {
+      try {
+        const resp = await api.put(
+          `/Tipos_Eleccion_Requerimientos/${id}`,
+          eleccion
+        );
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
       } catch (error) {
         return {
           success: false,

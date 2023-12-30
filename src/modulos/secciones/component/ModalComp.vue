@@ -25,7 +25,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="distrito_Id"
               :options="list_Distritos"
               label="Seleccione un distrito"
@@ -37,7 +36,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="municipio_Id"
               :options="list_Municipios"
               label="Seleccione un municipio"
@@ -49,7 +47,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="demarcacion_Id"
               :options="list_Demarcaciones"
               label="Seleccione una demarcación"
@@ -61,7 +58,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="seccion.nombre"
               label="Sección"
               hint="Ingrese seccón"
@@ -72,7 +68,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="seccion.cabecera_Localidad"
               label="Cabecera localidad"
               hint="Ingrese cabecera localidad"
@@ -86,7 +81,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="seccion.padron_Electoral"
               label="Padrón electoral"
               hint="Ingrese padrón electoral"
@@ -97,7 +91,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
+              debounce=""
               v-model.trim="seccion.listado_Nominal"
               label="Listado nominal"
               hint="Ingrese listado nominal"
@@ -108,7 +102,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="seccion.tipo_Seccion"
               label="Tipo de seccón"
               hint="Ingrese tipo de sección"

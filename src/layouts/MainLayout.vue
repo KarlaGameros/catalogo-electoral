@@ -10,7 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-toolbar-title> Sistema </q-toolbar-title>
+        <q-toolbar-title> Sistema Configuración Electoral</q-toolbar-title>
         <q-badge rounded color="green" />
         <q-btn flat round dense icon="apps" />
       </q-toolbar>
@@ -166,6 +166,39 @@
             </q-item-section>
 
             <q-item-section> Coaliciones </q-item-section>
+          </q-item>
+        </q-expansion-item>
+        <q-expansion-item
+          expand-separator
+          icon="groups"
+          label="Conoceles"
+          class="text-grey label-title text-bold"
+        >
+          <q-item
+            clickable
+            v-ripple
+            class="text-grey-8"
+            :to="{ name: 'preguntasConoceles' }"
+            active-class="text-pink-ieen-1"
+          >
+            <q-item-section avatar>
+              <q-icon name="chevron_right" />
+            </q-item-section>
+
+            <q-item-section> Preguntas </q-item-section>
+          </q-item>
+          <q-item
+            clickable
+            v-ripple
+            class="text-grey-8"
+            :to="{ name: 'rubrosConoceles' }"
+            active-class="text-pink-ieen-1"
+          >
+            <q-item-section avatar>
+              <q-icon name="chevron_right" />
+            </q-item-section>
+
+            <q-item-section> Rubros a evaluar </q-item-section>
           </q-item>
         </q-expansion-item>
       </q-list>

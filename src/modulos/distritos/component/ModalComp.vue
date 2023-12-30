@@ -25,7 +25,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="distrito.nombre"
               label="Nombre"
               hint="Ingrese nombre del distrito"
@@ -37,7 +36,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.number="distrito.no_Distrito"
               type="number"
               label="Número del distrito"
@@ -49,7 +47,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="distrito.integracion"
               label="Integración del distrito"
               hint="Ingrese integración del distrito"

@@ -33,7 +33,6 @@
         <q-card-section class="row q-pl-md">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model.trim="partido_Id"
               :options="list_Partidos_Politicos"
               label="Seleccione un actor político"

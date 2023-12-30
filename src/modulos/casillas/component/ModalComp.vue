@@ -25,7 +25,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="municipio_Id"
               :options="list_Municipios"
               label="Municipio"
@@ -37,7 +36,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="seccion_Id"
               :options="list_Secciones"
               label="Sección"
@@ -49,7 +47,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="tipo_casilla_Id"
               :options="list_Tipo_Casillas"
               label="Tipo de casilla"
@@ -61,7 +58,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.no_Casilla"
               label="Número de casilla"
               hint="Ingrese número de casilla"
@@ -73,7 +69,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.extension_Contigua"
               label="Extensión contigua"
               hint="Ingrese extensión contigua"
@@ -83,7 +78,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.listado_Nominal"
               label="Listado nominal"
               hint="Ingrese listado nominal"
@@ -95,7 +89,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.padron_Electoral"
               label="Padrón electoral"
               hint="Ingrese padrón electoral"
@@ -107,7 +100,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.boletas_Entregadas"
               label="Boletas entregadas"
               hint="Ingrese boletas entregadas"
@@ -119,7 +111,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="tipo_Seccion_Id"
               :options="tipos_Seccion"
               label="Tipo sección"
@@ -131,7 +122,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.nombre"
               label="Nombre casilla"
               hint="Ingrese nombre de casilla"
@@ -143,7 +133,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model="tipo_Lugar_Id"
               :options="tipos_Lugar"
               label="Tipo de lugar"
@@ -156,7 +145,6 @@
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
               v-model="casilla.domicilio"
-              filled
               clearable
               autogrow
               color="pink-8"
@@ -169,7 +157,6 @@
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
               v-model="casilla.referencia"
-              filled
               clearable
               autogrow
               color="pink-8"
@@ -181,7 +168,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.ubicacion"
               label="Ubicación"
               hint="Ingrese ubicación"
@@ -195,7 +181,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.latitud_Cartografica"
               label="Latitud cartográfica"
               hint="Ingrese latitud cartográfica"
@@ -211,7 +196,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.latitud_Google"
               label="Latitud de Google"
               hint="Ingrese latitud de Google"
@@ -225,7 +209,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.longitud_Cartografica"
               label="Longitud cartográfica"
               hint="Ingrese longitud cartográfica"
@@ -241,7 +224,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="casilla.longitud_Google"
               label="Longitud de Google"
               hint="Ingrese longitud de Google"

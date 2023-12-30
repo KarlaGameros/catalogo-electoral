@@ -49,6 +49,17 @@ const routes = [
         name: "secciones",
         component: () => import("../modulos/secciones/pages/IndexPage"),
       },
+      {
+        path: "/preguntasConoceles",
+        name: "preguntasConoceles",
+        component: () =>
+          import("../modulos/preguntasConoceles/pages/IndexPage"),
+      },
+      {
+        path: "/rubrosConoceles",
+        name: "rubrosConoceles",
+        component: () => import("../modulos/rubrosConoceles/pages/IndexPage"),
+      },
     ],
   },
 

@@ -27,7 +27,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
             <q-input
-              filled
               v-model.trim="eleccion.nombre"
               label="Nombre del tipo de elección"
               hint="Ingrese nombre de la elección"
@@ -39,7 +38,6 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <q-input
-              filled
               v-model.trim="eleccion.siglas"
               label="Siglas"
               hint="Ingrese siglas de la elección"

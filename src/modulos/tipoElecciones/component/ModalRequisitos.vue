@@ -23,7 +23,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <q-input
-              filled
               v-model.trim="requisistos.nombre"
               label="Nombre del requisito"
               hint="Ingrese nombre del requisito"
@@ -82,7 +81,7 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useTipoEleccionesStore } from "src/stores/tipo-elecciones";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, watch } from "vue";
 import TablaRequisitos from "../component/TablaRequisitos.vue";
 
 //-----------------------------------------------------------
@@ -97,6 +96,8 @@ const { modalRequisitos, isEditar, requisistos, eleccion } =
 onBeforeMount(() => {
   eleccionesStore.loadTiposEleeciones();
 });
+
+//-----------------------------------------------------------
 
 const actualizarModal = (valor) => {
   $q.loading.show();

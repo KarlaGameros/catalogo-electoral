@@ -25,7 +25,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="coalicion.nombre"
               label="Nombre"
               hint="Ingrese nombre del actor político"
@@ -37,7 +36,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="coalicion.siglas"
               label="Siglas"
               hint="Ingrese siglas de la coalición"
@@ -49,7 +47,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-file
-              filled
               bottom-slots
               v-model="logo_URL"
               label="Logo"
@@ -75,7 +72,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.number="coalicion.orden"
               label="Orden de la coalición"
               hint="Ingrese el orden"

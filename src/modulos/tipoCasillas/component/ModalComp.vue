@@ -27,7 +27,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="tipo_casilla.nombre"
               label="Nombre"
               hint="Ingrese nombre del tipo de casilla"
@@ -39,7 +38,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="tipo_casilla.siglas"
               label="Siglas"
               hint="Ingrese las siglas del tipo de casilla"

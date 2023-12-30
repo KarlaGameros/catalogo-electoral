@@ -25,7 +25,6 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
-              filled
               v-model.trim="estado_Id"
               :options="list_Estados"
               label="Seleccione un estado"
@@ -37,7 +36,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="municipio.nombre"
               label="Nombre del municipio"
               hint="Ingrese nombre del municipio"
@@ -49,7 +47,6 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              filled
               v-model.trim="municipio.clave"
               label="Clave"
               hint="Ingrese clave"
