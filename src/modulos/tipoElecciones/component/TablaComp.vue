@@ -4,6 +4,7 @@
       :rows="list_Tipos_Elecciones"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination="pagination"
       class="my-sticky-last-column-table"
     >

@@ -1,9 +1,11 @@
 <template>
   <div class="q-pa-md">
     <q-table
+      :visible-columns="visible_columns"
       :rows="rubro.variables"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination="pagination"
       class="my-sticky-last-column-table"
     >
@@ -33,6 +35,16 @@
               >
                 <q-tooltip>Editar</q-tooltip>
               </q-btn>
+            </div>
+            <div v-else-if="col.name == 'descripcion'">
+              <label>{{ col.value }}</label>
+              <q-tooltip
+                :offset="[10, 10]"
+                v-if="
+                  col.value.length != props.row['descripcion_Completa'].length
+                "
+                >{{ props.row["descripcion_Completa"] }}</q-tooltip
+              >
             </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
@@ -84,6 +96,13 @@ const columns = [
     sortable: true,
   },
   {
+    name: "descripcion_Completa",
+    align: "center",
+    label: "Descripción",
+    field: "descripcion_Completa",
+    sortable: true,
+  },
+  {
     name: "cumple",
     align: "center",
     label: "Cumple",
@@ -99,6 +118,15 @@ const columns = [
   },
 ];
 
+const visible_columns = [
+  "id",
+  "variable",
+  "tipo",
+  "descripcion",
+  "cumple",
+  "no_Cumple",
+];
+
 const filter = ref("");
 
 const pagination = ref({
@@ -110,6 +138,7 @@ const pagination = ref({
 
 const editar = async (id) => {
   conocelesStore.loadVariableById(id);
+  conocelesStore.updateEditar(true);
 };
 //-------------------------------------------------------------------
 </script>

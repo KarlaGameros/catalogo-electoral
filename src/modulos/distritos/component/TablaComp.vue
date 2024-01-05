@@ -5,6 +5,7 @@
       :rows="list_Distritos"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination="pagination"
       class="my-sticky-last-column-table"
     >

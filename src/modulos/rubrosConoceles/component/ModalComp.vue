@@ -54,8 +54,6 @@
               label="Variable"
               hint="Ingrese variable"
               autogrow
-              lazy-rules
-              :rules="[(val) => !!val || 'La variable es requerida']"
             >
             </q-input>
           </div>
@@ -65,8 +63,6 @@
               label="Tipo"
               hint="Ingrese tipo de la variable"
               autogrow
-              lazy-rules
-              :rules="[(val) => !!val || 'El tipo es requerido']"
             >
             </q-input>
           </div>
@@ -76,8 +72,6 @@
               type="textarea"
               label="Descripción"
               hint="Ingrese la descripción"
-              lazy-rules
-              :rules="[(val) => !!val || 'La descripción es requerida']"
             >
             </q-input>
           </div>
@@ -87,8 +81,6 @@
               type="number"
               label="Cumple"
               hint="Ingrese los puntos para cumple"
-              lazy-rules
-              :rules="[(val) => !!val || 'Los puntos son requeridos']"
             >
             </q-input>
           </div>
@@ -98,8 +90,6 @@
               type="number"
               label="No cumple"
               hint="Ingrese los puntos para no cumple"
-              lazy-rules
-              :rules="[(val) => !!val || 'Los puntos son requeridos']"
             >
             </q-input>
           </div>
@@ -108,8 +98,8 @@
             <div class="text-right q-gutter-xs">
               <q-btn
                 color="secondary"
-                icon="add"
-                label="Agregar"
+                :icon="variable.id != null ? 'edit' : 'add'"
+                :label="variable.id != null ? 'Editar' : 'Agregar'"
                 @click="agregarVariable()"
               />
             </div>
@@ -169,22 +159,51 @@ watch(variable.value, (val) => {
   }
 });
 
+const limpiar = () => {
+  variableEvaluar.value = null;
+  descripcion.value = null;
+  tipo.value = null;
+  cumple.value = null;
+  no_Cumple.value = null;
+};
+
 const actualizarModal = (valor) => {
   $q.loading.show();
   conocelesStore.actualizarModalRubro(valor);
   conocelesStore.initRubro();
+  limpiar();
   $q.loading.hide();
 };
 
 const agregarVariable = async () => {
   $q.loading.show();
-  conocelesStore.addVariable(
-    variableEvaluar.value,
-    tipo.value,
-    descripcion.value,
-    cumple.value,
-    no_Cumple.value
-  );
+  if (
+    variableEvaluar.value == null ||
+    tipo.value == null ||
+    descripcion.value == null ||
+    cumple.value == null ||
+    no_Cumple.value == null
+  ) {
+    $q.dialog({
+      title: "Atención",
+      message: "Campos incompletos",
+      icon: "Warning",
+      persistent: true,
+      transitionShow: "scale",
+      transitionHide: "scale",
+    });
+  } else {
+    await conocelesStore.addVariable(
+      rubro.value.id,
+      variableEvaluar.value,
+      tipo.value,
+      descripcion.value,
+      cumple.value,
+      no_Cumple.value
+    );
+    conocelesStore.initVariable();
+  }
+
   $q.loading.hide();
 };
 
@@ -192,6 +211,8 @@ const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {
+    console.log("mando", rubro.value);
+    resp = await conocelesStore.updateVariable(rubro.value);
   } else {
     resp = await conocelesStore.createRubro(rubro.value);
   }

@@ -50,8 +50,20 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     },
 
     initRubro() {
+      this.rubro.id = null;
+      this.rubro.rubro = null;
+      this.rubro.puntuacion_Maxima = null;
       this.rubro.variables = [];
     },
+
+    initVariable() {
+      this.variable.variable = null;
+      this.variable.tipo = null;
+      this.variable.descripcion = null;
+      this.variable.cumple = null;
+      this.variable.no_Cumple = null;
+    },
+
     //----------------------------------------------------------------------
     //GET ALL PREGUNTAS
     async loadPreguntasIdentidad() {
@@ -262,14 +274,18 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     //GET ALL VARIABLES BY RUBRO
     async loadVariablesByRubro(id) {
       try {
-        let resp = await api.get(`/VariablesEvaluacion/ByRubro/${id}`);
+        let resp = await api.get(`/Variables_Evaluacion/ByRubro/${id}`);
         let { data } = resp.data;
         this.rubro.variables = data.map((variable) => {
           return {
             id: variable.id,
             variable: variable.variable,
             tipo: variable.tipo,
-            descripcion: variable.descripcion,
+            descripcion:
+              variable.descripcion.length >= 25
+                ? variable.descripcion.slice(0, 25) + "..."
+                : variable.descripcion,
+            descripcion_Completa: variable.descripcion,
             cumple: variable.cumple,
             no_Cumple: variable.no_Cumple,
           };
@@ -287,7 +303,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     async loadVariableById(id) {
       try {
         let resp = null;
-        resp = await api.get(`/VariablesEvaluacion/${id}`);
+        resp = await api.get(`/Variables_Evaluacion/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {
@@ -355,15 +371,59 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       }
     },
 
-    async addVariable(variable, tipo, descripcion, cumple, no_Cumple) {
+    //----------------------------------------------------------------------
+    //UPDATE PREGUNTA
+    async updateVariable(variable) {
       try {
-        this.rubro.variables.push({
-          variable: variable,
-          tipo: tipo,
-          descripcion: descripcion,
-          cumple: cumple,
-          no_Cumple: no_Cumple,
-        });
+        const resp = await api.put(
+          `/Variables_Evaluacion/${variable.id}`,
+          variable
+        );
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    async addVariable(id, variable, tipo, descripcion, cumple, no_Cumple) {
+      try {
+        if (id == null) {
+          this.rubro.variables.push({
+            variable: variable,
+            tipo: tipo,
+            descripcion: descripcion,
+            cumple: cumple,
+            no_Cumple: no_Cumple,
+          });
+        } else {
+          let variableExistente = this.rubro.variables.find((v) => v.id === id);
+          if (variableExistente) {
+            variableExistente.variable = variable;
+            variableExistente.tipo = tipo;
+            variableExistente.descripcion = descripcion;
+            variableExistente.cumple = cumple;
+            variableExistente.no_Cumple = no_Cumple;
+          } else {
+            throw new Error(
+              "No se encontró la variable con el ID proporcionado."
+            );
+          }
+        }
       } catch (error) {
         return {
           success: false,

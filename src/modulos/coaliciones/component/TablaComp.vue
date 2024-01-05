@@ -4,6 +4,7 @@
       :rows="list_Coaliciones"
       :columns="columns"
       row-key="name"
+      :filter="filter"
       :pagination="pagination"
       class="my-sticky-last-column-table"
     >
