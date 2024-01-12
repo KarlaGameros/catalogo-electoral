@@ -138,7 +138,8 @@ const pagination = ref({
 
 const editar = async (id) => {
   $q.loading.show();
-  await eleccionesStore.loadRequisitos(id);
+  await eleccionesStore.loadRequerimientoById(id);
+  eleccionesStore.updateEditar(true);
   //await eleccionesStore.updateRequisitosEleccion(id);
   $q.loading.hide();
 };

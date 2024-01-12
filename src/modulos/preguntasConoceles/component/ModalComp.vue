@@ -25,8 +25,19 @@
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <q-input
+              v-if="!isEditar"
               readonly
               v-model="numero"
+              type="number"
+              label="Número"
+              hint="Ingrese número de la pregunta"
+              lazy-rules
+              :rules="[(val) => !!val || 'El número es requerido']"
+            >
+            </q-input>
+            <q-input
+              v-else
+              v-model="pregunta.numero"
               type="number"
               label="Número"
               hint="Ingrese número de la pregunta"
@@ -144,9 +155,16 @@ const opcion = ref(null);
 const numero = ref(null);
 //-----------------------------------------------------------
 
+// watch(opcion, (val) => {
+//   console.log(val);
+//   if (val != null) {
+//     otro.value = val.otro;
+//     opcion2.value = val.opcion;
+//   }
+// });
+
 watch(list_Preguntas_Identidad, (val) => {
   let last = list_Preguntas_Identidad.value.length;
-  console.log(last);
   numero.value = last + 1;
 });
 
@@ -171,13 +189,13 @@ const agregarOpcion = async () => {
 const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
-  pregunta.value.numero = numero.value;
   if (isEditar.value == true) {
     resp = await conocelesStore.updatePregunta(
       pregunta.value.id,
       pregunta.value
     );
   } else {
+    pregunta.value.numero = numero.value;
     resp = await conocelesStore.createPregunta(pregunta.value);
   }
   if (resp.success) {

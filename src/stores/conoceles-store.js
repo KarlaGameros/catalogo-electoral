@@ -74,7 +74,11 @@ export const useConocelesStore = defineStore("useConocelesStore", {
           return {
             id: item.id,
             numero: item.numero,
-            pregunta: item.pregunta,
+            pregunta_Completa: item.pregunta,
+            pregunta:
+              item.pregunta.length >= 50
+                ? item.pregunta.slice(0, 50) + "..."
+                : item.pregunta,
             tipo: item.tipo,
             apartado: item.apartado,
           };
@@ -213,6 +217,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
         let listRespuestas = data.map((item) => {
           return {
             id: item.id,
+            pregunta_Id: item.pregunta_Id,
             opcion: item.opcion,
             otro: item.otro,
           };
@@ -249,6 +254,31 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       }
     },
 
+    //----------------------------------------------------------------------
+    //DELETE OPCION
+    async deleteOpcion(id) {
+      try {
+        const resp = await api.delete(`/OpcionesPreguntas/${id}`);
+        if (resp.status == 200) {
+          let { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrio un error, intentelo de nuevo",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
     //----------------------------------------------------------------------
     //GET ALL RUBROS
     async loadRubrosEvaluacion() {
@@ -324,6 +354,32 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     },
 
     //----------------------------------------------------------------------
+    //DELETE VARIABLE
+    async deleteVariable(id) {
+      try {
+        const resp = await api.delete(`/Variables_Evaluacion/${id}`);
+        if (resp.status == 200) {
+          let { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrio un error, intentelo de nuevo",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
     //CREATE RUBRO EVALUACION
     async createRubro(rubro) {
       try {
@@ -373,12 +429,9 @@ export const useConocelesStore = defineStore("useConocelesStore", {
 
     //----------------------------------------------------------------------
     //UPDATE PREGUNTA
-    async updateVariable(variable) {
+    async updateVariable(rubro) {
       try {
-        const resp = await api.put(
-          `/Variables_Evaluacion/${variable.id}`,
-          variable
-        );
+        const resp = await api.put(`/Variables_Evaluacion/${rubro.id}`, rubro);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {
@@ -400,30 +453,37 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       }
     },
 
-    async addVariable(id, variable, tipo, descripcion, cumple, no_Cumple) {
+    async addVariable(variable, tipo, descripcion, cumple, no_Cumple) {
       try {
-        if (id == null) {
-          this.rubro.variables.push({
-            variable: variable,
-            tipo: tipo,
-            descripcion: descripcion,
-            cumple: cumple,
-            no_Cumple: no_Cumple,
-          });
-        } else {
-          let variableExistente = this.rubro.variables.find((v) => v.id === id);
-          if (variableExistente) {
-            variableExistente.variable = variable;
-            variableExistente.tipo = tipo;
-            variableExistente.descripcion = descripcion;
-            variableExistente.cumple = cumple;
-            variableExistente.no_Cumple = no_Cumple;
-          } else {
-            throw new Error(
-              "No se encontró la variable con el ID proporcionado."
-            );
-          }
-        }
+        this.rubro.variables.push({
+          variable: variable,
+          tipo: tipo,
+          descripcion: descripcion,
+          cumple: cumple,
+          no_Cumple: no_Cumple,
+        });
+        // if (id == null) {
+        //   this.rubro.variables.push({
+        //     variable: variable,
+        //     tipo: tipo,
+        //     descripcion: descripcion,
+        //     cumple: cumple,
+        //     no_Cumple: no_Cumple,
+        //   });
+        // } else {
+        //   let variableExistente = this.rubro.variables.find((v) => v.id === id);
+        //   if (variableExistente) {
+        //     variableExistente.variable = variable;
+        //     variableExistente.tipo = tipo;
+        //     variableExistente.descripcion = descripcion;
+        //     variableExistente.cumple = cumple;
+        //     variableExistente.no_Cumple = no_Cumple;
+        //   } else {
+        //     throw new Error(
+        //       "No se encontró la variable con el ID proporcionado."
+        //     );
+        //   }
+        // }
       } catch (error) {
         return {
           success: false,

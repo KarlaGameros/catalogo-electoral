@@ -194,7 +194,6 @@ const agregarVariable = async () => {
     });
   } else {
     await conocelesStore.addVariable(
-      rubro.value.id,
       variableEvaluar.value,
       tipo.value,
       descripcion.value,
@@ -211,7 +210,6 @@ const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {
-    console.log("mando", rubro.value);
     resp = await conocelesStore.updateVariable(rubro.value);
   } else {
     resp = await conocelesStore.createRubro(rubro.value);

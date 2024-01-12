@@ -140,6 +140,7 @@ const pagination = ref({
 //-------------------------------------------------------------------
 
 const addRequisitos = async (id) => {
+  console.log(id);
   $q.loading.show();
   eleccionesStore.actualizarModalRequisitos(true);
   await eleccionesStore.loadTipoEleccion(id);

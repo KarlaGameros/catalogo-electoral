@@ -16,6 +16,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
     list_Requisitos: [],
     requisistos: {
+      id: null,
       tipo_Eleccion_Id: null,
       nombre: null,
       archivo: false,
@@ -32,6 +33,15 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       this.eleccion.siglas = null;
       this.eleccion.fecha_Registro = null;
       this.eleccion.activo = false;
+    },
+
+    initRequisitos() {
+      this.requisistos.id = null;
+      this.requisistos.tipo_Eleccion_Id = null;
+      this.requisistos.nombre = null;
+      this.requisistos.archivo = false;
+      this.requisistos.genero = false;
+      this.requisistos.activo = false;
     },
 
     //----------------------------------------------------------------------
@@ -196,9 +206,11 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     //GET REQUISITOS
     async loadRequisitos(id) {
       try {
-        let resp = await api.get(`/Tipos_Eleccion_Requerimientos/${id}`);
+        let resp = await api.get("/Tipos_Eleccion_Requerimientos");
         let { data } = resp.data;
-        let listRequisitos = data.map((requisito) => {
+        let listByEleccion = [];
+        listByEleccion = data.filter((x) => x.tipo_Eleccion_Id == id);
+        let listRequisitos = listByEleccion.map((requisito) => {
           return {
             id: requisito.id,
             nombre: requisito.nombre,
@@ -217,12 +229,37 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
+    //GET REQUERIMIENTO
+    async loadRequerimientoById(id) {
+      try {
+        let resp = null;
+        resp = await api.get(`/Tipos_Eleccion_Requerimientos/${id}`);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success == true) {
+            this.requisistos.id = data.id;
+            this.requisistos.tipo_Eleccion_Id = data.tipo_Eleccion_Id;
+            this.requisistos.nombre = data.nombre;
+            this.requisistos.archivo = data.archivo;
+            this.requisistos.genero = data.genero;
+            this.requisistos.activo = data.activo;
+          }
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
     //UPDATE REQUISITOS ELECCION
-    async updateRequisitosEleccion(id, eleccion) {
+    async updateRequisitosEleccion(requisito) {
       try {
         const resp = await api.put(
-          `/Tipos_Eleccion_Requerimientos/${id}`,
-          eleccion
+          `/Tipos_Eleccion_Requerimientos/${requisito.id}`,
+          requisito
         );
         if (resp.status == 200) {
           const { success, data } = resp.data;

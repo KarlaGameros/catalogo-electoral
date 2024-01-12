@@ -1,6 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
+      :visible-columns="visible_columns"
       :rows="list_Preguntas_Identidad"
       :columns="columns"
       row-key="name"
@@ -43,6 +44,14 @@
               >
                 <q-tooltip>Eliminar partido político</q-tooltip>
               </q-btn>
+            </div>
+            <div v-else-if="col.name == 'pregunta'">
+              <label>{{ col.value }}</label>
+              <q-tooltip
+                :offset="[10, 10]"
+                v-if="col.value.length != props.row['pregunta_Completa'].length"
+                >{{ props.row["pregunta_Completa"] }}</q-tooltip
+              >
             </div>
 
             <label v-else>{{ col.value }}</label>
@@ -89,6 +98,13 @@ const columns = [
     sortable: true,
   },
   {
+    name: "pregunta_Completa",
+    align: "center",
+    label: "Pregunta",
+    field: "pregunta_Completa",
+    sortable: true,
+  },
+  {
     name: "tipo",
     align: "center",
     label: "Tipo",
@@ -110,6 +126,8 @@ const columns = [
     sortable: true,
   },
 ];
+
+const visible_columns = ["numero", "pregunta", "tipo", "apartado", "id"];
 
 const filter = ref("");
 

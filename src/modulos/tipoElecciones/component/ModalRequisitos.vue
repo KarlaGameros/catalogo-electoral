@@ -63,7 +63,8 @@
           <div class="col-12 justify-end q-pt-lg">
             <div class="text-right q-gutter-xs">
               <q-btn
-                label="Guardar"
+                :label="isEditar ? 'Editar' : 'Agregar'"
+                :icon="isEditar ? 'edit' : 'add'"
                 type="submit"
                 color="positive"
                 class="q-ml-sm"
@@ -102,6 +103,7 @@ onBeforeMount(() => {
 const actualizarModal = (valor) => {
   $q.loading.show();
   eleccionesStore.actualizarModalRequisitos(valor);
+  eleccionesStore.initRequisitos();
   $q.loading.hide();
 };
 
@@ -110,7 +112,7 @@ const onSubmit = async () => {
   $q.loading.show();
   requisistos.value.tipo_Eleccion_Id = eleccion.value.id;
   if (isEditar.value == true) {
-    resp = await eleccionesStore.updateEleccion(eleccion.value);
+    resp = await eleccionesStore.updateRequisitosEleccion(requisistos.value);
   } else {
     resp = await eleccionesStore.createRequisitos(requisistos.value);
   }
@@ -120,7 +122,7 @@ const onSubmit = async () => {
       type: "positive",
       message: resp.data,
     });
-    eleccionesStore.loadTiposEleeciones();
+    eleccionesStore.loadRequisitos(requisistos.value.tipo_Eleccion_Id);
     actualizarModal(false);
   } else {
     $q.notify({
