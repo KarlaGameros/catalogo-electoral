@@ -60,6 +60,16 @@ const routes = [
         name: "rubrosConoceles",
         component: () => import("../modulos/rubrosConoceles/pages/IndexPage"),
       },
+      {
+        path: "/paises",
+        name: "paises",
+        component: () => import("../modulos/paises/pages/IndexPage"),
+      },
+      {
+        path: "/gruposIndigenas",
+        name: "gruposIndigenas",
+        component: () => import("../modulos/gruposIndigenas/pages/IndexPage"),
+      },
     ],
   },
 

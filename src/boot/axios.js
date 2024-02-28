@@ -11,6 +11,10 @@ const api = axios.create({
   baseURL: "http://sistema.ieenayarit.org:9370/api",
 });
 
+const apiConoceles = axios.create({
+  baseURL: "http://sistema.ieenayarit.org:9378/api",
+});
+
 api.interceptors.request.use((config) => {
   config.headers = {
     Authorization: `Bearer ${localStorage.getItem("key")}`,
@@ -42,4 +46,4 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api };
+export { api, apiConoceles };

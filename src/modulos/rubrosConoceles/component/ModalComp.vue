@@ -116,6 +116,7 @@
                 @click="actualizarModal(false)"
               />
               <q-btn
+                :disable="isEditar"
                 label="Guardar"
                 type="submit"
                 color="secondary"
@@ -140,7 +141,8 @@ import { ref, watch } from "vue";
 
 const $q = useQuasar();
 const conocelesStore = useConocelesStore();
-const { modalRubros, rubro, isEditar, variable } = storeToRefs(conocelesStore);
+const { modalRubros, rubro, isEditar, variable, isEditarVariable } =
+  storeToRefs(conocelesStore);
 const variableEvaluar = ref(null);
 const descripcion = ref(null);
 const tipo = ref(null);
@@ -170,6 +172,7 @@ const limpiar = () => {
 const actualizarModal = (valor) => {
   $q.loading.show();
   conocelesStore.actualizarModalRubro(valor);
+  conocelesStore.updateEditar(false);
   conocelesStore.initRubro();
   limpiar();
   $q.loading.hide();
@@ -193,14 +196,31 @@ const agregarVariable = async () => {
       transitionHide: "scale",
     });
   } else {
-    await conocelesStore.addVariable(
-      variableEvaluar.value,
-      tipo.value,
-      descripcion.value,
-      cumple.value,
-      no_Cumple.value
-    );
-    conocelesStore.initVariable();
+    if (variable.value.id != null) {
+      if (isEditarVariable.value == true) {
+        conocelesStore.updateVariable(variable.value);
+      } else {
+        conocelesStore.createVariable(rubro.value.id, variable.value);
+      }
+    } else {
+      variable.value.variable = variableEvaluar.value;
+      variable.value.tipo = tipo.value;
+      variable.value.descripcion = descripcion.value;
+      variable.value.cumple = cumple.value;
+      variable.value.no_Cumple = no_Cumple.value;
+      if (rubro.value.id != null) {
+        conocelesStore.createVariable(rubro.value.id, variable.value);
+      }
+      await conocelesStore.addVariable(
+        variableEvaluar.value,
+        tipo.value,
+        descripcion.value,
+        cumple.value,
+        no_Cumple.value
+      );
+      conocelesStore.initVariable();
+      limpiar();
+    }
   }
 
   $q.loading.hide();
@@ -210,7 +230,6 @@ const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {
-    resp = await conocelesStore.updateVariable(rubro.value);
   } else {
     resp = await conocelesStore.createRubro(rubro.value);
   }
@@ -221,6 +240,7 @@ const onSubmit = async () => {
       message: resp.data,
     });
     actualizarModal(false);
+    conocelesStore.initRubro();
     conocelesStore.loadRubrosEvaluacion();
   } else {
     $q.notify({

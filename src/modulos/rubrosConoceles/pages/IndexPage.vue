@@ -33,6 +33,7 @@ import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
 
 //--------------------------------------------------------------------
+
 const conocelesStore = useConocelesStore();
 
 const actualizarModal = (valor) => {
@@ -40,5 +41,3 @@ const actualizarModal = (valor) => {
   conocelesStore.initRubro();
 };
 </script>
-
-<style scope></style>

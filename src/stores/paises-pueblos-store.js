@@ -1,67 +1,41 @@
 import { defineStore } from "pinia";
 import { api } from "src/boot/axios";
 
-export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
+export const usePaisesPueblosStore = defineStore("usePaisesPueblosStore", {
   state: () => ({
     modal: false,
-    modalRequisitos: false,
+    modalGrupo: false,
     isEditar: false,
-    list_Tipos_Elecciones: [],
-    eleccion: {
+    list_Paises: [],
+    list_Grupos_Indigenas: [],
+    pais: {
       id: null,
       siglas: null,
       nombre: null,
-      fecha_Registro: null,
-      activo: false,
+      clave: null,
+      pais: null,
     },
-    list_Requisitos: [],
-    requisistos: {
+    grupo: {
       id: null,
-      tipo_Eleccion_Id: null,
-      nombre: null,
-      descripcion: null,
-      archivo: false,
-      genero: false,
-      activo: false,
+      grupo: null,
+      clave: null,
     },
   }),
   actions: {
     //----------------------------------------------------------------------
-    //INIT TIPO ELECCIONES
-    initElecciones() {
-      this.eleccion.id = null;
-      this.eleccion.nombre = null;
-      this.eleccion.siglas = null;
-      this.eleccion.fecha_Registro = null;
-      this.eleccion.activo = false;
-    },
-
-    initRequisitos() {
-      this.requisistos.id = null;
-      this.requisistos.tipo_Eleccion_Id = null;
-      this.requisistos.nombre = null;
-      this.requisistos.descripcion = null;
-      this.requisistos.archivo = false;
-      this.requisistos.genero = false;
-      this.requisistos.activo = false;
-    },
-
-    //----------------------------------------------------------------------
-    //GET ALL
-    async loadTiposEleeciones() {
+    //GET ALL PAISES
+    async loadPaises() {
       try {
-        let resp = await api.get("/Tipos_Elecciones");
+        let resp = await api.get("/Paises");
         let { data } = resp.data;
-        let listElecciones = data.map((eleccion) => {
+        let listPaises = data.map((pais) => {
           return {
-            id: eleccion.id,
-            siglas: eleccion.siglas,
-            nombre: eleccion.nombre,
-            fecha_Registro: eleccion.fecha_Registro,
-            activo: eleccion.activo,
+            id: pais.id,
+            pais: pais.pais,
+            clave: pais.clave,
           };
         });
-        this.list_Tipos_Elecciones = listElecciones;
+        this.list_Paises = listPaises;
       } catch (error) {
         return {
           success: false,
@@ -71,19 +45,19 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
-    //GET TIPO ELECCION
-    async loadTipoEleccion(id) {
+    //GET PAIS
+    async loadPais(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Tipos_Elecciones/${id}`);
+        resp = await api.get(`/Paises/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {
-            this.eleccion.id = data.id;
-            this.eleccion.nombre = data.nombre;
-            this.eleccion.siglas = data.siglas;
-            this.eleccion.fecha_Registro = data.fecha_Registro;
-            this.eleccion.activo = data.activo;
+            this.pais.id = data.id;
+            this.pais.nombre = data.pais;
+            this.pais.siglas = data.clave;
+            this.pais.clave = data.clave;
+            this.pais.pais = data.pais;
           }
         }
       } catch (error) {
@@ -95,10 +69,10 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
-    //CREATE ELECCION
-    async createEleccion(eleccion) {
+    //CREATE PAIS
+    async createPais(pais) {
       try {
-        const resp = await api.post("/Tipos_Elecciones", eleccion);
+        const resp = await api.post("/Paises", pais);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {
@@ -121,10 +95,36 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
-    //DELETE ELECCION
-    async deleteEleccion(id) {
+    //UPDATE PAIS
+    async updatePais(pais) {
       try {
-        const resp = await api.delete(`/Tipos_Elecciones/${id}`);
+        const resp = await api.put(`/Paises/${pais.id}`, pais);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //DELETE PAIS
+    async deletePais(id) {
+      try {
+        const resp = await api.delete(`/Paises/${id}`);
         if (resp.status == 200) {
           let { success, data } = resp.data;
           if (success === true) {
@@ -147,81 +147,19 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
-    //UPDATE ELECCION
-    async updateEleccion(eleccion) {
+    //GET ALL GRUPOS INDIGENAS
+    async loadGrupos() {
       try {
-        const resp = await api.put(
-          `/Tipos_Elecciones/${eleccion.id}`,
-          eleccion
-        );
-        if (resp.status == 200) {
-          const { success, data } = resp.data;
-          if (success === true) {
-            return { success, data };
-          } else {
-            return { success, data };
-          }
-        } else {
-          return {
-            success: false,
-            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
-          };
-        }
-      } catch (error) {
-        return {
-          success: false,
-          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
-        };
-      }
-    },
-
-    //----------------------------------------------------------------------
-    //CREATE REQUISITOS
-    async createRequisitos(id, requisito) {
-      try {
-        const resp = await api.post(
-          `/Tipos_Eleccion_Requerimientos/${id}`,
-          requisito
-        );
-        if (resp.status == 200) {
-          const { success, data } = resp.data;
-          if (success === true) {
-            return { success, data };
-          } else {
-            return { success, data };
-          }
-        } else {
-          return {
-            success: false,
-            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
-          };
-        }
-      } catch (error) {
-        return {
-          success: false,
-          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
-        };
-      }
-    },
-
-    //----------------------------------------------------------------------
-    //GET REQUISITOS
-    async loadRequisitos(id) {
-      try {
-        let resp = await api.get(
-          `/Tipos_Eleccion_Requerimientos/ByTipoEleccion/${id}`
-        );
+        let resp = await api.get("/GruposIndigenas");
         let { data } = resp.data;
-        let listRequisitos = data.map((requisito) => {
+        let listGrupos = data.map((grupo) => {
           return {
-            id: requisito.id,
-            nombre: requisito.nombre,
-            genero: requisito.genero,
-            activo: requisito.activo,
-            archivo: requisito.archivo,
+            id: grupo.id,
+            grupo: grupo.grupo,
+            clave: grupo.clave,
           };
         });
-        this.list_Requisitos = listRequisitos;
+        this.list_Grupos_Indigenas = listGrupos;
       } catch (error) {
         return {
           success: false,
@@ -231,20 +169,69 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
-    //GET REQUERIMIENTO
-    async loadRequerimientoById(id) {
+    //CREATE GRUPO INDIGENA
+    async createGrupo(grupo) {
+      try {
+        const resp = await api.post("/GruposIndigenas", grupo);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //UPDATE GRUPO
+    async updateGrupo(grupo) {
+      try {
+        const resp = await api.put(`/GruposIndigenas/${grupo.id}`, grupo);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //GET GRUPO
+    async loadGrupo(id) {
       try {
         let resp = null;
-        resp = await api.get(`/Tipos_Eleccion_Requerimientos/${id}`);
+        resp = await api.get(`/GruposIndigenas/${id}`);
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success == true) {
-            this.requisistos.id = data.id;
-            this.requisistos.tipo_Eleccion_Id = data.tipo_Eleccion_Id;
-            this.requisistos.nombre = data.nombre;
-            this.requisistos.archivo = data.archivo;
-            this.requisistos.genero = data.genero;
-            this.requisistos.activo = data.activo;
+            this.grupo.id = data.id;
+            this.grupo.clave = data.clave;
+            this.grupo.grupo = data.grupo;
           }
         }
       } catch (error) {
@@ -256,15 +243,12 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
     },
 
     //----------------------------------------------------------------------
-    //UPDATE REQUISITOS ELECCION
-    async updateRequisitosEleccion(requisito) {
+    //DELETE GRUPO
+    async deleteGrupo(id) {
       try {
-        const resp = await api.put(
-          `/Tipos_Eleccion_Requerimientos/${requisito.id}`,
-          requisito
-        );
+        const resp = await api.delete(`/GruposIndigenas/${id}`);
         if (resp.status == 200) {
-          const { success, data } = resp.data;
+          let { success, data } = resp.data;
           if (success === true) {
             return { success, data };
           } else {
@@ -273,7 +257,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
         } else {
           return {
             success: false,
-            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+            data: "Ocurrio un error, intentelo de nuevo",
           };
         }
       } catch (error) {
@@ -293,8 +277,8 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       this.isEditar = valor;
     },
 
-    actualizarModalRequisitos(valor) {
-      this.modalRequisitos = valor;
+    actualizarModalGrupo(valor) {
+      this.modalGrupo = valor;
     },
   },
 });

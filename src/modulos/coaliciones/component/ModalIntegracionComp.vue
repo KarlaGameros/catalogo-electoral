@@ -19,7 +19,7 @@
           dense
           v-close-popup
         />
-        <div class="col-12 bg-pink-8" style="border-radius: 5px; width: 1100px">
+        <div class="col-12 bg-grey-5" style="border-radius: 5px; width: 1100px">
           <div class="text-h6 text-center text-white">
             <q-avatar rounded>
               <img :src="coalicion.logo_URL" alt="" />
@@ -49,7 +49,7 @@
               <q-btn
                 label="Cancelar"
                 type="reset"
-                color="negative"
+                color="red"
                 @click="actualizarModal(false)"
               />
               <q-btn
@@ -95,6 +95,8 @@ onBeforeMount(() => {
 
 const actualizarModal = (valor) => {
   coalicionStore.actualizarModalIntegracion(valor);
+  coalicionStore.initCoalicion();
+  coalicionStore.initIntegracion();
 };
 
 const onSubmit = async () => {
@@ -118,7 +120,6 @@ const onSubmit = async () => {
       coalicionStore.loadCoaliciones();
       coalicionStore.loadIntegracionesByCoalicion(coalicion.value.id);
       partido_Id.value = null;
-      //actualizarModal(false);
     } else {
       $q.notify({
         position: "top-right",

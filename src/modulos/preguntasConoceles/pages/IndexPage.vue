@@ -25,6 +25,7 @@
     </div>
     <TablaComp />
     <ModalComp />
+    <ModalSubOpciones />
   </q-page>
 </template>
 <script setup>
@@ -32,6 +33,7 @@ import { useQuasar } from "quasar";
 import { useConocelesStore } from "src/stores/conoceles-store";
 import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
+import ModalSubOpciones from "../component/ModalSubOpciones.vue";
 
 //--------------------------------------------------------------------
 

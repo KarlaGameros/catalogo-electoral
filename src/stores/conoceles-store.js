@@ -1,14 +1,17 @@
 import { defineStore } from "pinia";
-import { api } from "src/boot/axios";
+import { api, apiConoceles } from "src/boot/axios";
 
 export const useConocelesStore = defineStore("useConocelesStore", {
   state: () => ({
     modal: false,
     modalRubros: false,
+    modalSubOpcion: false,
     isEditar: false,
+    isEditarVariable: false,
     list_Preguntas_Identidad: [],
     list_Respuestas: [],
     list_Rubros_Evaluacion: [],
+    list_Sub_Opciones: [],
     pregunta: {
       numero: null,
       pregunta: null,
@@ -17,6 +20,10 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       opciones: [],
     },
     opciones: [],
+    opcionPregunta: {
+      opcion: null,
+      otro: null,
+    },
     rubro: {
       id: null,
       rubro: null,
@@ -37,6 +44,10 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       descripcion: null,
       cumple: null,
       no_Cumple: null,
+    },
+    subOpcion: {
+      sub_Opcion: null,
+      opcion_Id: null,
     },
   }),
   actions: {
@@ -62,6 +73,11 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       this.variable.descripcion = null;
       this.variable.cumple = null;
       this.variable.no_Cumple = null;
+    },
+
+    initSubOpcion() {
+      this.subOpcion.opcion_Id = null;
+      this.subOpcion.sub_Opcion = null;
     },
 
     //----------------------------------------------------------------------
@@ -220,9 +236,37 @@ export const useConocelesStore = defineStore("useConocelesStore", {
             pregunta_Id: item.pregunta_Id,
             opcion: item.opcion,
             otro: item.otro,
+            label: item.opcion,
+            value: item.id,
           };
         });
         this.pregunta.opciones = listRespuestas;
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //CREATE OPCION
+    async createOpcion(opcion, id) {
+      try {
+        const resp = await api.post(`/OpcionesPreguntas/${id}`, opcion);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
       } catch (error) {
         return {
           success: false,
@@ -279,6 +323,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
         };
       }
     },
+
     //----------------------------------------------------------------------
     //GET ALL RUBROS
     async loadRubrosEvaluacion() {
@@ -311,11 +356,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
             id: variable.id,
             variable: variable.variable,
             tipo: variable.tipo,
-            descripcion:
-              variable.descripcion.length >= 25
-                ? variable.descripcion.slice(0, 25) + "..."
-                : variable.descripcion,
-            descripcion_Completa: variable.descripcion,
+            descripcion: variable.descripcion,
             cumple: variable.cumple,
             no_Cumple: variable.no_Cumple,
           };
@@ -344,6 +385,32 @@ export const useConocelesStore = defineStore("useConocelesStore", {
             this.variable.cumple = data.cumple;
             this.variable.no_Cumple = data.no_Cumple;
           }
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //CREATE VARIABLE
+    async createVariable(id, variable) {
+      try {
+        const resp = await api.post(`/Variables_Evaluacion/${id}`, variable);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
         }
       } catch (error) {
         return {
@@ -429,9 +496,12 @@ export const useConocelesStore = defineStore("useConocelesStore", {
 
     //----------------------------------------------------------------------
     //UPDATE PREGUNTA
-    async updateVariable(rubro) {
+    async updateVariable(variable) {
       try {
-        const resp = await api.put(`/Variables_Evaluacion/${rubro.id}`, rubro);
+        const resp = await api.put(
+          `/Variables_Evaluacion/${variable.id}`,
+          variable
+        );
         if (resp.status == 200) {
           const { success, data } = resp.data;
           if (success === true) {
@@ -462,28 +532,6 @@ export const useConocelesStore = defineStore("useConocelesStore", {
           cumple: cumple,
           no_Cumple: no_Cumple,
         });
-        // if (id == null) {
-        //   this.rubro.variables.push({
-        //     variable: variable,
-        //     tipo: tipo,
-        //     descripcion: descripcion,
-        //     cumple: cumple,
-        //     no_Cumple: no_Cumple,
-        //   });
-        // } else {
-        //   let variableExistente = this.rubro.variables.find((v) => v.id === id);
-        //   if (variableExistente) {
-        //     variableExistente.variable = variable;
-        //     variableExistente.tipo = tipo;
-        //     variableExistente.descripcion = descripcion;
-        //     variableExistente.cumple = cumple;
-        //     variableExistente.no_Cumple = no_Cumple;
-        //   } else {
-        //     throw new Error(
-        //       "No se encontró la variable con el ID proporcionado."
-        //     );
-        //   }
-        // }
       } catch (error) {
         return {
           success: false,
@@ -492,14 +540,84 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       }
     },
 
+    //----------------------------------------------------------------------
+    //LIMPIAR CAHCE
+    async limpiarCache() {
+      try {
+        let resp = await apiConoceles.get("/Tipos_Elecciones/Borrar_Cache");
+        let { data, success } = resp;
+        return success, data;
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //CREATE SUBOPCION
+    async createSubOpcion(subOpcion) {
+      try {
+        const resp = await api.post(
+          `/SubOpcionesPreguntas/${subOpcion.opcion_Id}`,
+          subOpcion
+        );
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //GET SUBOPCIONES
+    async loadSubopcionesByOpcion(id) {
+      try {
+        let resp = await api.get(`/SubOpcionesPreguntas/ByOpcion/${id}`);
+        let { data } = resp.data;
+        let listSubOpciones = data.map((item) => {
+          return {
+            id: item.id,
+            sub_Opcion: item.sub_Opcion,
+          };
+        });
+        this.list_Sub_Opciones = listSubOpciones;
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
     actualizarModal(valor) {
       this.modal = valor;
     },
     actualizarModalRubro(valor) {
       this.modalRubros = valor;
     },
+    actualizarModalSubOpcion(valor) {
+      this.modalSubOpcion = valor;
+    },
     updateEditar(valor) {
       this.isEditar = valor;
+    },
+    updateEditarVariable(valor) {
+      this.isEditarVariable = valor;
     },
   },
 });

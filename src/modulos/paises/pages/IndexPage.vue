@@ -5,7 +5,7 @@
         <div class="q-gutter-sm">
           <q-breadcrumbs>
             <q-breadcrumbs-el icon="home" to="/" />
-            <q-breadcrumbs-el icon="list_alt" label="Coaliciones" />
+            <q-breadcrumbs-el icon="list_alt" label="Paises" />
           </q-breadcrumbs>
         </div>
       </div>
@@ -25,46 +25,23 @@
     </div>
     <TablaComp />
     <ModalComp />
-    <ModalIntegracionComp />
-    <ModalCombinaciones />
   </q-page>
 </template>
 <script setup>
 import { useQuasar } from "quasar";
-import { useCoalicionesStore } from "src/stores/coaliciones-store";
-import { useAuthStore } from "src/stores/auth-store";
+import { usePaisesPueblosStore } from "src/stores/paises-pueblos-store";
 import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
-import ModalIntegracionComp from "../component/ModalIntegracionComp.vue";
-import ModalCombinaciones from "../component/ModalCombinaciones.vue";
-import { storeToRefs } from "pinia";
-import { onBeforeMount } from "vue";
 
 //--------------------------------------------------------------------
-
 const $q = useQuasar();
-const coalicionStore = useCoalicionesStore();
-const authStore = useAuthStore();
-const { modulo } = storeToRefs(authStore);
-const siglas = "SCE-CAT-CO";
+const paisesPueblosStore = usePaisesPueblosStore();
 
 //--------------------------------------------------------------------
-
-onBeforeMount(() => {
-  leerPermisos();
-});
-
-//--------------------------------------------------------------------
-
-const leerPermisos = async () => {
-  $q.loading.show();
-  await authStore.loadModulo(siglas);
-  $q.loading.hide();
-};
 
 const actualizarModal = (valor) => {
   $q.loading.show();
-  coalicionStore.actualizarModal(valor);
+  paisesPueblosStore.actualizarModal(valor);
   $q.loading.hide();
 };
 </script>

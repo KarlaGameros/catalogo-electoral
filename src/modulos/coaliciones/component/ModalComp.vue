@@ -54,7 +54,7 @@
               accept=".jpg, image/*"
             >
               <template v-if="isEditar" v-slot:prepend>
-                <q-avatar>
+                <q-avatar square style="width: auto; height: 35px">
                   <img :src="coalicion.logo_URL" />
                 </q-avatar>
               </template>
@@ -81,19 +81,18 @@
             >
             </q-input>
           </div>
-
           <div class="col-12 justify-end">
             <div class="text-right q-gutter-xs">
               <q-btn
                 label="Cancelar"
                 type="reset"
-                color="negative"
+                color="red"
                 @click="actualizarModal(false)"
               />
               <q-btn
                 label="Guardar"
                 type="submit"
-                color="positive"
+                color="secondary"
                 class="q-ml-sm"
               />
             </div>
@@ -123,6 +122,8 @@ const actualizarModal = (valor) => {
   coalicionStore.actualizarModal(valor);
   coalicionStore.updateEditar(valor);
   coalicionStore.initCoalicion();
+  coalicionStore.initIntegracion();
+  logo_URL.value = null;
 };
 
 const onSubmit = async () => {

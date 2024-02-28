@@ -8,9 +8,7 @@
     <q-card style="width: 800px; max-width: 80vw">
       <q-card-section class="row">
         <div class="text-h6">
-          {{
-            !isEditar ? "Registrar tipo de elección" : "Editar tipo de elección"
-          }}
+          {{ !isEditar ? "Registrar pais" : "Editar pais" }}
         </div>
         <q-space />
         <q-btn
@@ -25,35 +23,28 @@
 
       <q-card-section>
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
-          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="eleccion.nombre"
-              label="Nombre del tipo de elección"
-              hint="Ingrese nombre de la elección"
+              v-model.trim="pais.nombre"
+              label="Nombre"
+              hint="Ingrese nombre del pais"
               autogrow
               lazy-rules
-              :rules="[(val) => !!val || 'El nombre es requerido']"
+              :rules="[(val) => !!val || 'El nombre del pais es requerido']"
             >
             </q-input>
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="eleccion.siglas"
-              label="Siglas"
-              hint="Ingrese siglas de la elección"
+              v-model.trim="pais.siglas"
+              label="Clave"
+              hint="Ingrese clave del pais"
+              autogrow
               lazy-rules
-              :rules="[(val) => !!val || 'Las siglas es requerida']"
+              :rules="[(val) => !!val || 'La clave del pais es requerido']"
             >
             </q-input>
           </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-            <q-checkbox
-              color="pink"
-              v-model="eleccion.activo"
-              label="Activo?"
-            />
-          </div>
-
           <div class="col-12 justify-end">
             <div class="text-right q-gutter-xs">
               <q-btn
@@ -79,34 +70,32 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
-import { useTipoEleccionesStore } from "src/stores/tipo-elecciones";
-import { onBeforeMount } from "vue";
+import { usePaisesPueblosStore } from "src/stores/paises-pueblos-store";
 
 //-----------------------------------------------------------
 
 const $q = useQuasar();
-const eleccionesStore = useTipoEleccionesStore();
-const { modal, isEditar, eleccion } = storeToRefs(eleccionesStore);
+const paisesPueblosStore = usePaisesPueblosStore();
+const { modal, isEditar, pais } = storeToRefs(paisesPueblosStore);
 
 //-----------------------------------------------------------
 
-onBeforeMount(() => {
-  eleccionesStore.loadTiposEleeciones();
-});
-
 const actualizarModal = (valor) => {
-  eleccionesStore.actualizarModal(valor);
-  eleccionesStore.updateEditar(valor);
-  eleccionesStore.initElecciones();
+  $q.loading.show();
+  paisesPueblosStore.actualizarModal(valor);
+  paisesPueblosStore.updateEditar(valor);
+  $q.loading.hide();
 };
 
 const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
+  pais.value.clave = pais.value.siglas;
+  pais.value.pais = pais.value.nombre;
   if (isEditar.value == true) {
-    resp = await eleccionesStore.updateEleccion(eleccion.value);
+    resp = await paisesPueblosStore.updatePais(pais.value);
   } else {
-    resp = await eleccionesStore.createEleccion(eleccion.value);
+    resp = await paisesPueblosStore.createPais(pais.value);
   }
   if (resp.success) {
     $q.notify({
@@ -114,7 +103,7 @@ const onSubmit = async () => {
       type: "positive",
       message: resp.data,
     });
-    eleccionesStore.loadTiposEleeciones();
+    paisesPueblosStore.loadPaises();
     actualizarModal(false);
   } else {
     $q.notify({

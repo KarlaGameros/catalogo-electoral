@@ -33,7 +33,7 @@
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar partido político</q-tooltip>
+                <q-tooltip>Editar pregunta</q-tooltip>
               </q-btn>
               <q-btn
                 flat
@@ -42,7 +42,16 @@
                 icon="delete"
                 @click="eliminar(col.value)"
               >
-                <q-tooltip>Eliminar partido político</q-tooltip>
+                <q-tooltip>Eliminar pregunta</q-tooltip>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                color="pink"
+                icon="list"
+                @click="subOpciones(col.value)"
+              >
+                <q-tooltip>Agregar sub opción</q-tooltip>
               </q-btn>
             </div>
             <div v-else-if="col.name == 'pregunta'">
@@ -139,6 +148,15 @@ const pagination = ref({
 });
 
 //-------------------------------------------------------------------
+
+const subOpciones = async (id) => {
+  $q.loading.show();
+  await conocelesStore.loadRespuestas(id);
+  await conocelesStore.loadPregunta(id);
+  conocelesStore.actualizarModalSubOpcion(true);
+  $q.loading.hide();
+};
+
 const editar = async (id) => {
   $q.loading.show();
   await conocelesStore.loadRespuestas(id);

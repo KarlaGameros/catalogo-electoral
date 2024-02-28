@@ -56,7 +56,7 @@
               accept=".jpg, image/*"
             >
               <template v-if="isEditar" v-slot:prepend>
-                <q-avatar>
+                <q-avatar square style="width: auto; height: 35px">
                   <img :src="partido.logo_URL" />
                 </q-avatar>
               </template>
@@ -135,13 +135,13 @@
               <q-btn
                 label="Cancelar"
                 type="reset"
-                color="negative"
+                color="red"
                 @click="actualizarModal(false)"
               />
               <q-btn
                 label="Guardar"
                 type="submit"
-                color="positive"
+                color="secondary"
                 class="q-ml-sm"
               />
             </div>

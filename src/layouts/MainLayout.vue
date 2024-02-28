@@ -11,8 +11,7 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title> Sistema Configuración Electoral</q-toolbar-title>
-        <q-badge rounded color="green" />
-        <q-btn flat round dense icon="apps" />
+        <q-btn flat round dense icon="apps" @click="show" />
       </q-toolbar>
     </q-header>
 
@@ -78,7 +77,6 @@
             <q-item-section avatar>
               <q-icon name="chevron_right" />
             </q-item-section>
-
             <q-item-section> Secciones </q-item-section>
           </q-item>
         </q-expansion-item>
@@ -169,12 +167,14 @@
           </q-item>
         </q-expansion-item>
         <q-expansion-item
+          v-if="CatalogosConList.length > 0"
           expand-separator
           icon="groups"
-          label="Conoceles"
+          label="Conóceles"
           class="text-grey label-title text-bold"
         >
           <q-item
+            v-if="CatalogosConList.some((element) => element == 'SCE-PRE-ID')"
             clickable
             v-ripple
             class="text-grey-8"
@@ -188,6 +188,7 @@
             <q-item-section> Preguntas </q-item-section>
           </q-item>
           <q-item
+            v-if="CatalogosConList.some((element) => element == 'SCE-RUB-EV')"
             clickable
             v-ripple
             class="text-grey-8"
@@ -200,8 +201,48 @@
 
             <q-item-section> Rubros a evaluar </q-item-section>
           </q-item>
+          <q-item
+            v-if="CatalogosConList.some((element) => element == 'SCE-CAT-PA')"
+            clickable
+            v-ripple
+            class="text-grey-8"
+            :to="{ name: 'paises' }"
+            active-class="text-pink-ieen-1"
+          >
+            <q-item-section avatar>
+              <q-icon name="chevron_right" />
+            </q-item-section>
+
+            <q-item-section> Países </q-item-section>
+          </q-item>
+          <q-item
+            v-if="CatalogosConList.some((element) => element == 'SCE-CAT-GI')"
+            clickable
+            v-ripple
+            class="text-grey-8"
+            :to="{ name: 'gruposIndigenas' }"
+            active-class="text-pink-ieen-1"
+          >
+            <q-item-section avatar>
+              <q-icon name="chevron_right" />
+            </q-item-section>
+
+            <q-item-section> Grupos indígenas </q-item-section>
+          </q-item>
         </q-expansion-item>
       </q-list>
+      <div
+        v-if="CatalogosConList.some((element) => element == 'SCE-BTN-LC')"
+        class="text-center q-pa-md items-start q-gutter-md"
+      >
+        <q-btn
+          type="button"
+          color="pink-1"
+          icon-right="cleaning_services"
+          label="Limpiar cache"
+          @click="limpiarCache(true)"
+        />
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -214,8 +255,9 @@
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { useAuthStore } from "src/stores/auth-store";
+import { useConocelesStore } from "src/stores/conoceles-store";
 import { defineComponent, onBeforeMount, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   name: "MainLayout",
@@ -226,14 +268,16 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const $q = useQuasar();
     const route = useRoute();
+    const router = useRouter();
     const authStore = useAuthStore();
+    const conocelesStore = useConocelesStore();
     const usuario = ref("");
     const { modulos, sistemas, apps } = storeToRefs(authStore);
     const CatalogosConList = ref([]);
-    const ConsumiblesList = ref([]);
-    const SolicitudesList = ref([]);
+    const showAvance = ref(false);
 
     onBeforeMount(async () => {
+      showAvance.value = true;
       if (route.query.key) {
         localStorage.setItem("key", route.query.key);
       }
@@ -308,18 +352,69 @@ export default defineComponent({
           case "SCE-CAT-CO":
             CatalogosConList.value.push("SCE-CAT-CO");
             break;
+          case "SCE-PRE-ID":
+            CatalogosConList.value.push("SCE-PRE-ID");
+            break;
+          case "SCE-RUB-EV":
+            CatalogosConList.value.push("SCE-RUB-EV");
+            break;
+          case "SCE-CAT-PA":
+            CatalogosConList.value.push("SCE-CAT-PA");
+            break;
+          case "SCE-CAT-GI":
+            CatalogosConList.value.push("SCE-CAT-GI");
+            break;
+          case "SCE-BTN-LC":
+            CatalogosConList.value.push("SCE-BTN-LC");
+            break;
         }
       });
       $q.loading.hide();
     };
 
+    const limpiarCache = () => {
+      $q.dialog({
+        title: "Limpiar caché",
+        message: "¿Está seguro de limpiar la caché de Conóceles?",
+        icon: "Warning",
+        persistent: true,
+        transitionShow: "scale",
+        transitionHide: "scale",
+        ok: {
+          color: "positive",
+          label: "¡Sí!, aceptar",
+        },
+        cancel: {
+          color: "negative",
+          label: " No Cancelar",
+        },
+      }).onOk(async () => {
+        $q.loading.show();
+        const resp = await conocelesStore.limpiarCache();
+        if (resp.success) {
+          $q.loading.hide();
+          $q.notify({
+            position: "top-right",
+            type: "positive",
+            message: "Caché eliminado",
+          });
+        } else {
+          $q.loading.hide();
+          $q.notify({
+            position: "top-right",
+            type: "negative",
+            message: resp.data,
+          });
+        }
+      });
+    };
+
     return {
       leftDrawerOpen,
       CatalogosConList,
-      ConsumiblesList,
-      SolicitudesList,
       usuario,
       show,
+      limpiarCache,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },

@@ -36,16 +36,6 @@
                 <q-tooltip>Editar</q-tooltip>
               </q-btn>
             </div>
-            <div v-else-if="col.name == 'descripcion'">
-              <label>{{ col.value }}</label>
-              <q-tooltip
-                :offset="[10, 10]"
-                v-if="
-                  col.value.length != props.row['descripcion_Completa'].length
-                "
-                >{{ props.row["descripcion_Completa"] }}</q-tooltip
-              >
-            </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
         </q-tr>
@@ -96,13 +86,6 @@ const columns = [
     sortable: true,
   },
   {
-    name: "descripcion_Completa",
-    align: "center",
-    label: "Descripción",
-    field: "descripcion_Completa",
-    sortable: true,
-  },
-  {
     name: "cumple",
     align: "center",
     label: "Cumple",
@@ -138,7 +121,7 @@ const pagination = ref({
 
 const editar = async (id) => {
   conocelesStore.loadVariableById(id);
-  conocelesStore.updateEditar(true);
+  conocelesStore.updateEditarVariable(true);
 };
 //-------------------------------------------------------------------
 </script>

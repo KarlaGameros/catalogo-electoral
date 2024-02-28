@@ -91,7 +91,7 @@
               <q-btn
                 label="Cancelar"
                 type="reset"
-                color="negative"
+                color="red"
                 @click="actualizarModal(false)"
               />
             </div>
@@ -177,7 +177,6 @@ const combinaciones = async (id) => {
         message: resp.data,
       });
       coalicionStore.getCombinaciones(id);
-      //coalicionesStore.loadCoaliciones();
     } else {
       $q.loading.hide();
       $q.notify({

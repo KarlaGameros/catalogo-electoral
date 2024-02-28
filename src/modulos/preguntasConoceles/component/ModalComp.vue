@@ -148,20 +148,12 @@ import TablaRespuestasComp from "./TablaRespuestasComp.vue";
 
 const $q = useQuasar();
 const conocelesStore = useConocelesStore();
-const { modal, isEditar, pregunta, list_Preguntas_Identidad } =
+const { modal, isEditar, pregunta, list_Preguntas_Identidad, opcionPregunta } =
   storeToRefs(conocelesStore);
 const otro = ref(false);
 const opcion = ref(null);
 const numero = ref(null);
 //-----------------------------------------------------------
-
-// watch(opcion, (val) => {
-//   console.log(val);
-//   if (val != null) {
-//     otro.value = val.otro;
-//     opcion2.value = val.opcion;
-//   }
-// });
 
 watch(list_Preguntas_Identidad, (val) => {
   let last = list_Preguntas_Identidad.value.length;
@@ -180,7 +172,31 @@ const actualizarModal = (valor) => {
 
 const agregarOpcion = async () => {
   $q.loading.show();
-  conocelesStore.addOpcion(opcion.value, otro.value);
+  let resp = null;
+  if (isEditar.value == true) {
+    opcionPregunta.value.opcion = opcion.value;
+    opcionPregunta.value.otro = otro.value;
+    resp = await conocelesStore.createOpcion(
+      opcionPregunta.value,
+      pregunta.value.id
+    );
+    if (resp.success) {
+      $q.notify({
+        position: "top-right",
+        type: "positive",
+        message: resp.data,
+      });
+      conocelesStore.loadRespuestas(pregunta.value.id);
+    } else {
+      $q.notify({
+        position: "top-right",
+        type: "negative",
+        message: resp.data,
+      });
+    }
+  } else {
+    conocelesStore.addOpcion(opcion.value, otro.value);
+  }
   opcion.value = null;
   otro.value = false;
   $q.loading.hide();
@@ -190,12 +206,11 @@ const onSubmit = async () => {
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {
-    resp = await conocelesStore.updatePregunta(
+    pregunta.value.opciones = resp = await conocelesStore.updatePregunta(
       pregunta.value.id,
       pregunta.value
     );
   } else {
-    pregunta.value.numero = numero.value;
     resp = await conocelesStore.createPregunta(pregunta.value);
   }
   if (resp.success) {

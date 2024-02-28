@@ -32,6 +32,15 @@
             >
             </q-input>
           </div>
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <q-input
+              v-model.trim="requisistos.descripcion"
+              label="Descripción"
+              hint="Ingrese descripción del requisito"
+              autogrow
+            >
+            </q-input>
+          </div>
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
             <q-checkbox
               color="pink"
@@ -66,7 +75,7 @@
                 :label="isEditar ? 'Editar' : 'Agregar'"
                 :icon="isEditar ? 'edit' : 'add'"
                 type="submit"
-                color="positive"
+                color="secondary"
                 class="q-ml-sm"
               />
             </div>
@@ -114,7 +123,10 @@ const onSubmit = async () => {
   if (isEditar.value == true) {
     resp = await eleccionesStore.updateRequisitosEleccion(requisistos.value);
   } else {
-    resp = await eleccionesStore.createRequisitos(requisistos.value);
+    resp = await eleccionesStore.createRequisitos(
+      eleccion.value.id,
+      requisistos.value
+    );
   }
   if (resp.success) {
     $q.notify({

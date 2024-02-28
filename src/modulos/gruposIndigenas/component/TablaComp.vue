@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
-      :rows="list_Partidos_Politicos"
+      :rows="list_Grupos_Indigenas"
       :columns="columns"
       row-key="name"
       :filter="filter"
@@ -32,7 +32,7 @@
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar partido político</q-tooltip>
+                <q-tooltip>Editar pais</q-tooltip>
               </q-btn>
               <q-btn
                 flat
@@ -41,44 +41,7 @@
                 icon="delete"
                 @click="eliminar(col.value)"
               >
-                <q-tooltip>Eliminar partido político</q-tooltip>
-              </q-btn>
-            </div>
-            <div v-else-if="col.name === 'logo_URL'">
-              <q-avatar
-                square
-                style="width: auto; height: 35px"
-                v-if="props.row.logo_URL != null"
-              >
-                <img :src="props.row.logo_URL" alt="" />
-              </q-avatar>
-            </div>
-            <div v-else-if="col.name === 'independiente'">
-              <q-btn
-                flat
-                :color="props.row.independiente == true ? 'green' : 'red'"
-                :icon="props.row.independiente == true ? 'done' : 'close'"
-              >
-              </q-btn>
-            </div>
-            <div v-else-if="col.name === 'pantone_Fondo'">
-              <q-btn
-                v-if="props.row.pantone_Fondo != null"
-                flat
-                round
-                :style="{ background: props.row.pantone_Fondo }"
-              >
-                <q-tooltip>{{ props.row.pantone_Fondo }}</q-tooltip>
-              </q-btn>
-            </div>
-            <div v-else-if="col.name === 'pantone_Letra'">
-              <q-btn
-                v-if="props.row.pantone_Letra != null"
-                flat
-                round
-                :style="{ background: props.row.pantone_Letra }"
-              >
-                <q-tooltip>{{ props.row.pantone_Letra }}</q-tooltip>
+                <q-tooltip>Eliminar pais</q-tooltip>
               </q-btn>
             </div>
             <label v-else>{{ col.value }}</label>
@@ -93,70 +56,40 @@
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
-import { usePartidosPoliticosStore } from "../../../stores/partidos-politicos-store";
-
+import { usePaisesPueblosStore } from "../../../stores/paises-pueblos-store";
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
-const partidosStore = usePartidosPoliticosStore();
-const { list_Partidos_Politicos } = storeToRefs(partidosStore);
+const paisesPueblosStore = usePaisesPueblosStore();
+const { list_Grupos_Indigenas } = storeToRefs(paisesPueblosStore);
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
-  partidosStore.loadPartidosPoliticos();
+  cargarData();
 });
 
 //-------------------------------------------------------------------
 
+const cargarData = () => {
+  $q.loading.show();
+  paisesPueblosStore.loadGrupos();
+  $q.loading.hide();
+};
+
 const columns = [
   {
-    name: "nombre",
+    name: "grupo",
     align: "center",
     label: "Nombre",
-    field: "nombre",
+    field: "grupo",
     sortable: true,
   },
   {
-    name: "siglas",
+    name: "clave",
     align: "center",
-    label: "Siglas",
-    field: "siglas",
-    sortable: true,
-  },
-  {
-    name: "logo_URL",
-    align: "center",
-    label: "Logo",
-    field: "logo_URL",
-    sortable: true,
-  },
-  {
-    name: "independiente",
-    align: "center",
-    label: "Independiente",
-    field: "independiente",
-    sortable: true,
-  },
-  {
-    name: "prioridad",
-    align: "center",
-    label: "Prioridad",
-    field: "prioridad",
-    sortable: true,
-  },
-  {
-    name: "pantone_Fondo",
-    align: "center",
-    label: "Pantone fondo",
-    field: "pantone_Fondo",
-    sortable: true,
-  },
-  {
-    name: "pantone_Letra",
-    align: "center",
-    label: "Pantone letra",
-    field: "pantone_Letra",
+    label: "Clave",
+    field: "clave",
     sortable: true,
   },
   {
@@ -180,16 +113,16 @@ const pagination = ref({
 //-------------------------------------------------------------------
 const editar = async (id) => {
   $q.loading.show();
-  await partidosStore.loadPartdio(id);
-  partidosStore.updateEditar(true);
-  partidosStore.actualizarModal(true);
+  await paisesPueblosStore.loadGrupo(id);
+  paisesPueblosStore.updateEditar(true);
+  paisesPueblosStore.actualizarModalGrupo(true);
   $q.loading.hide();
 };
 
 const eliminar = async (id) => {
   $q.dialog({
-    title: "Eliminar partido politico",
-    message: "¿Está seguro de eliminar el partido politico?",
+    title: "Eliminar grupo indigena",
+    message: "¿Está seguro de eliminar el grupo indigena?",
     icon: "Warning",
     persistent: true,
     transitionShow: "scale",
@@ -204,7 +137,7 @@ const eliminar = async (id) => {
     },
   }).onOk(async () => {
     $q.loading.show();
-    const resp = await partidosStore.deletePartido(id);
+    const resp = await paisesPueblosStore.deleteGrupo(id);
     if (resp.success) {
       $q.loading.hide();
       $q.notify({
@@ -212,7 +145,7 @@ const eliminar = async (id) => {
         type: "positive",
         message: resp.data,
       });
-      partidosStore.loadPartidosPoliticos();
+      paisesPueblosStore.loadGrupos();
     } else {
       $q.loading.hide();
       $q.notify({

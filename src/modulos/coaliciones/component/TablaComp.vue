@@ -26,7 +26,6 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
-                v-if="modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -36,7 +35,6 @@
                 <q-tooltip>Agregar integracón</q-tooltip>
               </q-btn>
               <q-btn
-                v-if="modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -46,7 +44,6 @@
                 <q-tooltip>Combinaciones</q-tooltip>
               </q-btn>
               <q-btn
-                v-if="modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -56,7 +53,6 @@
                 <q-tooltip>Editar coalición</q-tooltip>
               </q-btn>
               <q-btn
-                v-if="modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -67,7 +63,11 @@
               </q-btn>
             </div>
             <div v-else-if="col.name === 'logo_URL'">
-              <q-avatar v-if="props.row.logo_URL != null">
+              <q-avatar
+                square
+                v-if="props.row.logo_URL != null"
+                style="width: auto; height: 35px"
+              >
                 <img :src="props.row.logo_URL" alt="" />
               </q-avatar>
             </div>
@@ -212,7 +212,6 @@ const combinaciones = async (id) => {
           type: "positive",
           message: resp.data,
         });
-        //coalicionesStore.loadCoaliciones();
       } else {
         $q.loading.hide();
         $q.notify({

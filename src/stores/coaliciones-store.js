@@ -32,6 +32,10 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
       this.coalicion.orden = null;
     },
 
+    initIntegracion() {
+      this.integracion.partido_Id = null;
+    },
+
     //----------------------------------------------------------------------
     //GET ALL
     async loadCoaliciones() {

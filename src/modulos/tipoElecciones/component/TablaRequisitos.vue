@@ -140,7 +140,6 @@ const editar = async (id) => {
   $q.loading.show();
   await eleccionesStore.loadRequerimientoById(id);
   eleccionesStore.updateEditar(true);
-  //await eleccionesStore.updateRequisitosEleccion(id);
   $q.loading.hide();
 };
 

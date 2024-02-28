@@ -129,7 +129,7 @@ const eliminar = async (id) => {
       label: "¡Sí!, eliminar",
     },
     cancel: {
-      color: "negative",
+      color: "secondary",
       label: " No Cancelar",
     },
   }).onOk(async () => {
