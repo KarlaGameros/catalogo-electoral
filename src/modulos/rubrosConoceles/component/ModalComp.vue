@@ -50,7 +50,7 @@
 
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="variableEvaluar"
+              v-model.trim="variable.variable"
               label="Variable"
               hint="Ingrese variable"
               autogrow
@@ -59,7 +59,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="tipo"
+              v-model.trim="variable.tipo"
               label="Tipo"
               hint="Ingrese tipo de la variable"
               autogrow
@@ -68,7 +68,7 @@
           </div>
           <div class="col-12">
             <q-input
-              v-model.trim="descripcion"
+              v-model.trim="variable.descripcion"
               type="textarea"
               label="Descripción"
               hint="Ingrese la descripción"
@@ -77,7 +77,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model="cumple"
+              v-model="variable.cumple"
               type="number"
               label="Cumple"
               hint="Ingrese los puntos para cumple"
@@ -86,7 +86,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="no_Cumple"
+              v-model.trim="variable.no_Cumple"
               type="number"
               label="No cumple"
               hint="Ingrese los puntos para no cumple"
@@ -116,7 +116,7 @@
                 @click="actualizarModal(false)"
               />
               <q-btn
-                :disable="isEditar"
+                v-if="isEditar == false"
                 label="Guardar"
                 type="submit"
                 color="secondary"
@@ -135,7 +135,7 @@ import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useConocelesStore } from "src/stores/conoceles-store";
 import TablaVariables from "./TablaVariables.vue";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 //-----------------------------------------------------------
 
@@ -151,41 +151,24 @@ const no_Cumple = ref(null);
 
 //-----------------------------------------------------------
 
-watch(variable.value, (val) => {
-  if (val != null) {
-    variableEvaluar.value = val.variable;
-    descripcion.value = val.descripcion;
-    tipo.value = val.tipo;
-    cumple.value = val.cumple;
-    no_Cumple.value = val.no_Cumple;
-  }
-});
-
-const limpiar = () => {
-  variableEvaluar.value = null;
-  descripcion.value = null;
-  tipo.value = null;
-  cumple.value = null;
-  no_Cumple.value = null;
-};
-
 const actualizarModal = (valor) => {
   $q.loading.show();
   conocelesStore.actualizarModalRubro(valor);
   conocelesStore.updateEditar(false);
   conocelesStore.initRubro();
-  limpiar();
+  conocelesStore.initVariable();
   $q.loading.hide();
 };
 
 const agregarVariable = async () => {
   $q.loading.show();
+  let resp = null;
   if (
-    variableEvaluar.value == null ||
-    tipo.value == null ||
-    descripcion.value == null ||
-    cumple.value == null ||
-    no_Cumple.value == null
+    variable.value.variable == null ||
+    variable.value.tipo == null ||
+    variable.value.descripcion == null ||
+    variable.value.cumple == null ||
+    variable.value.no_Cumple == null
   ) {
     $q.dialog({
       title: "Atención",
@@ -197,11 +180,7 @@ const agregarVariable = async () => {
     });
   } else {
     if (variable.value.id != null) {
-      if (isEditarVariable.value == true) {
-        conocelesStore.updateVariable(variable.value);
-      } else {
-        conocelesStore.createVariable(rubro.value.id, variable.value);
-      }
+      resp = await conocelesStore.updateVariable(variable.value);
     } else {
       variable.value.variable = variableEvaluar.value;
       variable.value.tipo = tipo.value;
@@ -209,7 +188,10 @@ const agregarVariable = async () => {
       variable.value.cumple = cumple.value;
       variable.value.no_Cumple = no_Cumple.value;
       if (rubro.value.id != null) {
-        conocelesStore.createVariable(rubro.value.id, variable.value);
+        resp = await conocelesStore.createVariable(
+          rubro.value.id,
+          variable.value
+        );
       }
       await conocelesStore.addVariable(
         variableEvaluar.value,
@@ -219,10 +201,23 @@ const agregarVariable = async () => {
         no_Cumple.value
       );
       conocelesStore.initVariable();
-      limpiar();
     }
   }
-
+  if (resp.success == true) {
+    $q.notify({
+      position: "top-right",
+      type: "positive",
+      message: resp.data,
+    });
+    await conocelesStore.loadVariablesByRubro(rubro.value.id);
+    conocelesStore.initVariable();
+  } else {
+    $q.notify({
+      position: "top-right",
+      type: "negative",
+      message: resp.data,
+    });
+  }
   $q.loading.hide();
 };
 

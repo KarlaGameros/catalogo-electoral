@@ -258,6 +258,7 @@ import { useAuthStore } from "src/stores/auth-store";
 import { useConocelesStore } from "src/stores/conoceles-store";
 import { defineComponent, onBeforeMount, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { EncryptStorage } from "storage-encryption";
 
 export default defineComponent({
   name: "MainLayout",
@@ -270,6 +271,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const authStore = useAuthStore();
+    const encryptStorage = new EncryptStorage("SECRET_KEY", "sessionStorage");
     const conocelesStore = useConocelesStore();
     const usuario = ref("");
     const { modulos, sistemas, apps } = storeToRefs(authStore);
@@ -279,19 +281,19 @@ export default defineComponent({
     onBeforeMount(async () => {
       showAvance.value = true;
       if (route.query.key) {
-        localStorage.setItem("key", route.query.key);
+        encryptStorage.encrypt("key", route.query.key);
       }
 
       if (route.query.sistema) {
-        localStorage.setItem("sistema", route.query.sistema);
+        encryptStorage.encrypt("sistema", route.query.sistema);
       }
 
       if (route.query.usr) {
-        localStorage.setItem("usuario", route.query.usr);
-        usuario.value = localStorage.getItem("usuario");
+        encryptStorage.encrypt("usuario", route.query.usr);
+        usuario.value = encryptStorage.decrypt("usuario");
       } else {
-        if (localStorage.getItem("usuario") != null) {
-          usuario.value = localStorage.getItem("usuario");
+        if (encryptStorage.decrypt("usuario") != null) {
+          usuario.value = encryptStorage.decrypt("usuario");
         }
       }
       await loadMenu();
@@ -311,9 +313,9 @@ export default defineComponent({
         } else {
           window.location =
             action.url +
-            `/#/?key=${localStorage.getItem("key")}&sistema=${
+            `/#/?key=${encryptStorage.decrypt("key")}&sistema=${
               action.id
-            }&usr=${localStorage.getItem("usuario")}`;
+            }&usr=${encryptStorage.decrypt("usuario")}`;
         }
       });
     };

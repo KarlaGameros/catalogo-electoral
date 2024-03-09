@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.registrar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Requisitos de la elección</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -44,6 +46,7 @@
                 <q-tooltip>Editar elección</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -73,6 +76,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
+import { useAuthStore } from "src/stores/auth-store";
 import { onBeforeMount, ref } from "vue";
 import { useTipoEleccionesStore } from "../../../stores/tipo-elecciones";
 
@@ -80,15 +84,25 @@ import { useTipoEleccionesStore } from "../../../stores/tipo-elecciones";
 
 const $q = useQuasar();
 const eleccionesStore = useTipoEleccionesStore();
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
 const { list_Tipos_Elecciones } = storeToRefs(eleccionesStore);
+const siglas = "SCE-TIP-EL";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   eleccionesStore.loadTiposEleeciones();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {

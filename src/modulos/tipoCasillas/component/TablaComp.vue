@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Editar tipo de casilla</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -57,6 +59,7 @@
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
+import { useAuthStore } from "src/stores/auth-store";
 import { useCasillasStore } from "../../../stores/casillas-store";
 
 //-------------------------------------------------------------------
@@ -64,14 +67,24 @@ import { useCasillasStore } from "../../../stores/casillas-store";
 const $q = useQuasar();
 const casillasStore = useCasillasStore();
 const { list_Tipo_Casillas } = storeToRefs(casillasStore);
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-TIP-CA";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   casillasStore.loadTipoCasillas();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {

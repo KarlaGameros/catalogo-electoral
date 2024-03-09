@@ -81,6 +81,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
+              type="number"
               v-model.trim="seccion.padron_Electoral"
               label="Padrón electoral"
               hint="Ingrese padrón electoral"
@@ -91,7 +92,7 @@
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              debounce=""
+              type="number"
               v-model.trim="seccion.listado_Nominal"
               label="Listado nominal"
               hint="Ingrese listado nominal"

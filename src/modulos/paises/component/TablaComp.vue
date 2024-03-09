@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Editar pais</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -57,19 +59,31 @@ import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
 import { usePaisesPueblosStore } from "../../../stores/paises-pueblos-store";
+import { useAuthStore } from "src/stores/auth-store";
+
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
 const paisesPueblosStore = usePaisesPueblosStore();
 const { list_Paises } = storeToRefs(paisesPueblosStore);
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-CAT-PA";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   cargarData();
+  leerPermisos();
 });
 
-//-------------------------------------------------------------------
+//--------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const cargarData = () => {
   $q.loading.show();

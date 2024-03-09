@@ -62,6 +62,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -71,6 +72,7 @@
                 <q-tooltip>Editar distrito</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -89,24 +91,35 @@
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
+import { storeToRefs } from "pinia";
 import { onBeforeMount, ref } from "vue";
 import { useDistritosStore } from "../../../stores/distritos-store";
+import { useAuthStore } from "src/stores/auth-store";
 
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
+const authStore = useAuthStore();
 const distritosStore = useDistritosStore();
 const { list_Distritos } = storeToRefs(distritosStore);
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-CAT-DI";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   distritosStore.loadDistritos();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {

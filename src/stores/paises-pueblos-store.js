@@ -22,6 +22,19 @@ export const usePaisesPueblosStore = defineStore("usePaisesPueblosStore", {
     },
   }),
   actions: {
+    initGrupo() {
+      this.grupo.id = null;
+      this.grupo.grupo = null;
+      this.grupo.clave = null;
+    },
+
+    initPais() {
+      this.pais.id = null;
+      this.pais.siglas = null;
+      this.pais.nombre = null;
+      this.pais.clave = null;
+      this.pais.pais = null;
+    },
     //----------------------------------------------------------------------
     //GET ALL PAISES
     async loadPaises() {

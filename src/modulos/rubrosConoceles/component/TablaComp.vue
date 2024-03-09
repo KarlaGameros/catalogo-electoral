@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Editar partido político</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -58,20 +60,31 @@ import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
 import { useConocelesStore } from "src/stores/conoceles-store";
+import { useAuthStore } from "src/stores/auth-store";
 
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
 const conocelesStore = useConocelesStore();
 const { list_Rubros_Evaluacion } = storeToRefs(conocelesStore);
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-RUB-EV";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   conocelesStore.loadRubrosEvaluacion();
+  leerPermisos();
 });
 
-//-------------------------------------------------------------------
+//--------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {

@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.registrar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Agregar integracón</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.registrar"
                 flat
                 round
                 color="pink"
@@ -44,6 +46,7 @@
                 <q-tooltip>Combinaciones</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -53,6 +56,7 @@
                 <q-tooltip>Editar coalición</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -102,14 +106,22 @@ const coalicionesStore = useCoalicionesStore();
 const authStore = useAuthStore();
 const { modulo } = storeToRefs(authStore);
 const { list_Coaliciones } = storeToRefs(coalicionesStore);
+const siglas = "SCE-CAT-CO";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   coalicionesStore.loadCoaliciones();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {

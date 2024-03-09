@@ -13,6 +13,10 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       nombre: null,
       fecha_Registro: null,
       activo: false,
+      propietario_1: false,
+      propietario_2: false,
+      suplente_1: false,
+      suplente_2: false,
     },
     list_Requisitos: [],
     requisistos: {
@@ -34,6 +38,10 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       this.eleccion.siglas = null;
       this.eleccion.fecha_Registro = null;
       this.eleccion.activo = false;
+      this.eleccion.propietario_1 = false;
+      this.eleccion.propietario_2 = false;
+      this.eleccion.suplente_1 = false;
+      this.eleccion.suplente_2 = false;
     },
 
     initRequisitos() {
@@ -84,6 +92,10 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
             this.eleccion.siglas = data.siglas;
             this.eleccion.fecha_Registro = data.fecha_Registro;
             this.eleccion.activo = data.activo;
+            this.eleccion.propietario_1 = data.propietario_1;
+            this.eleccion.propietario_2 = data.propietario_2;
+            this.eleccion.suplente_1 = data.suplente_1;
+            this.eleccion.suplente_2 = data.suplente_2;
           }
         }
       } catch (error) {

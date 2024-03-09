@@ -85,7 +85,7 @@ const { modal, isEditar, tipo_casilla } = storeToRefs(casillasStore);
 const actualizarModal = (valor) => {
   casillasStore.actualizarModal(valor);
   casillasStore.updateEditar(valor);
-  casillasStore.initCasilla();
+  casillasStore.initTipoCasilla();
 };
 
 const onSubmit = async () => {

@@ -8,7 +8,11 @@
     <q-card style="width: 800px; max-width: 80vw">
       <q-card-section class="row">
         <div class="text-h6">
-          {{ !isEditar ? "Registrar integración" : "Editar integración" }}
+          {{
+            !isEditar
+              ? `Registrar integración: ${coalicion.nombre}`
+              : `Editar integración: ${coalicion.nombre}`
+          }}
         </div>
         <q-space />
         <q-btn
@@ -19,14 +23,6 @@
           dense
           v-close-popup
         />
-        <div class="col-12 bg-grey-5" style="border-radius: 5px; width: 1100px">
-          <div class="text-h6 text-center text-white">
-            <q-avatar rounded>
-              <img :src="coalicion.logo_URL" alt="" />
-            </q-avatar>
-            {{ coalicion.nombre }}
-          </div>
-        </div>
       </q-card-section>
 
       <q-form class="q-col-gutter-xs" @submit="onSubmit">

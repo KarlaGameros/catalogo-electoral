@@ -43,16 +43,13 @@ export const useMunicipiosStore = defineStore("useMunicipiosStore", {
     //GEL ALL
     async loadMunicipios() {
       try {
-        let resp = await api.get("/Municipios");
+        let resp = await api.get("/Municipios/MunicipiosNayarit");
         let { data } = resp.data;
-
-        let listNayarit = [];
-        listNayarit = data.filter((x) => x.estado_Id == 18);
-        let listMunicipios = listNayarit.map((municipio) => {
+        let listMunicipios = data.map((municipio) => {
           return {
             id: municipio.id,
             estado_Id: municipio.estado_Id,
-            estado: municipio.estado,
+            estado: "Nayarit",
             clave: municipio.clave,
             nombre: municipio.nombre,
             fecha_Registro: municipio.fecha_Registro,

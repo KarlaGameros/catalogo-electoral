@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Editar partido político</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -54,12 +56,11 @@
               </q-avatar>
             </div>
             <div v-else-if="col.name === 'independiente'">
-              <q-btn
-                flat
+              <q-icon
+                size="sm"
                 :color="props.row.independiente == true ? 'green' : 'red'"
-                :icon="props.row.independiente == true ? 'done' : 'close'"
-              >
-              </q-btn>
+                :name="props.row.independiente == true ? 'done' : 'close'"
+              />
             </div>
             <div v-else-if="col.name === 'pantone_Fondo'">
               <q-btn
@@ -93,6 +94,7 @@
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
+import { useAuthStore } from "src/stores/auth-store";
 import { usePartidosPoliticosStore } from "../../../stores/partidos-politicos-store";
 
 //-------------------------------------------------------------------
@@ -100,14 +102,24 @@ import { usePartidosPoliticosStore } from "../../../stores/partidos-politicos-st
 const $q = useQuasar();
 const partidosStore = usePartidosPoliticosStore();
 const { list_Partidos_Politicos } = storeToRefs(partidosStore);
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-CAT-PP";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   partidosStore.loadPartidosPoliticos();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {
@@ -217,7 +229,7 @@ const eliminar = async (id) => {
       $q.loading.hide();
       $q.notify({
         position: "top-right",
-        type: "negative",
+        type: "regative",
         message: resp.data,
       });
     }

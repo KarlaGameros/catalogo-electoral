@@ -58,10 +58,10 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="casilla.no_Casilla"
+              v-model="casilla.no_Casilla"
               label="Número de casilla"
               hint="Ingrese número de casilla"
-              autogrow
+              type="number"
               lazy-rules
               :rules="[(val) => !!val || 'El número de casilla es requerido']"
             >
@@ -69,10 +69,10 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="casilla.extension_Contigua"
+              type="number"
+              v-model="casilla.extension_Contigua"
               label="Extensión contigua"
               hint="Ingrese extensión contigua"
-              autogrow
             >
             </q-input>
           </div>
@@ -89,10 +89,10 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="casilla.padron_Electoral"
+              v-model="casilla.padron_Electoral"
               label="Padrón electoral"
               hint="Ingrese padrón electoral"
-              autogrow
+              type="number"
               lazy-rules
               :rules="[(val) => !!val || 'El padrón electoral es requerido']"
             >
@@ -100,10 +100,10 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="casilla.boletas_Entregadas"
+              type="number"
+              v-model="casilla.boletas_Entregadas"
               label="Boletas entregadas"
               hint="Ingrese boletas entregadas"
-              autogrow
               lazy-rules
               :rules="[(val) => !!val || 'Boletas entregadas es requerido']"
             >
@@ -181,10 +181,10 @@
           </div>
           <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="casilla.latitud_Cartografica"
+              type="number"
+              v-model="casilla.latitud_Cartografica"
               label="Latitud cartográfica"
               hint="Ingrese latitud cartográfica"
-              autogrow
               clearable
               color="pink-8"
               lazy-rules
@@ -199,7 +199,7 @@
               v-model.trim="casilla.latitud_Google"
               label="Latitud de Google"
               hint="Ingrese latitud de Google"
-              autogrow
+              type="number"
               clearable
               color="pink-8"
               lazy-rules
@@ -212,7 +212,7 @@
               v-model.trim="casilla.longitud_Cartografica"
               label="Longitud cartográfica"
               hint="Ingrese longitud cartográfica"
-              autogrow
+              type="number"
               clearable
               color="pink-8"
               lazy-rules
@@ -227,7 +227,7 @@
               v-model.trim="casilla.longitud_Google"
               label="Longitud de Google"
               hint="Ingrese longitud de Google"
-              autogrow
+              type="number"
               clearable
               color="pink-8"
               lazy-rules

@@ -26,7 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
-                v-if="modulo.actualizar"
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -36,7 +36,7 @@
                 <q-tooltip>Editar demarcación</q-tooltip>
               </q-btn>
               <q-btn
-                v-if="modulo.eliminar"
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -45,6 +45,13 @@
               >
                 <q-tooltip>Eliminar demarcación</q-tooltip>
               </q-btn>
+            </div>
+            <div v-else-if="col.name === 'activo'">
+              <q-icon
+                size="sm"
+                :color="props.row.activo == true ? 'green' : 'red'"
+                :name="props.row.activo == true ? 'done' : 'close'"
+              />
             </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
@@ -68,14 +75,23 @@ const casillasStore = useCasillasStore();
 const { list_Casillas } = storeToRefs(casillasStore);
 const authStore = useAuthStore();
 const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-CAT-CA";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   casillasStore.loadCasillas();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
+
 const editar = async (id) => {
   $q.loading.show();
   await casillasStore.loadCasilla(id);
@@ -86,8 +102,8 @@ const editar = async (id) => {
 
 const eliminar = async (id) => {
   $q.dialog({
-    title: "Eliminar sección",
-    message: "¿Está seguro de eliminar la sección?",
+    title: "Eliminar casilla",
+    message: "¿Está seguro de eliminar la casilla?",
     icon: "Warning",
     persistent: true,
     transitionShow: "scale",
@@ -98,11 +114,11 @@ const eliminar = async (id) => {
     },
     cancel: {
       color: "negative",
-      label: " No Cancelar",
+      label: "No, Cancelar",
     },
   }).onOk(async () => {
     $q.loading.show();
-    const resp = await seccionesStore.deleteCasilla(id);
+    const resp = await casillasStore.deleteCasilla(id);
     if (resp.success) {
       $q.loading.hide();
       $q.notify({
@@ -110,7 +126,7 @@ const eliminar = async (id) => {
         type: "positive",
         message: resp.data,
       });
-      seccionesStore.loadSecciones();
+      casillasStore.loadCasillas();
     } else {
       $q.loading.hide();
       $q.notify({

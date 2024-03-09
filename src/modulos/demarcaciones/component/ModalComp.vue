@@ -134,6 +134,7 @@ const actualizarModal = (valor) => {
   demarcacionStore.actualizarModal(valor);
   demarcacionStore.updateEditar(valor);
   demarcacionStore.initDemarcacion();
+  municipio_Id.value = null;
 };
 
 const onSubmit = async () => {

@@ -68,7 +68,7 @@ const columns = [
   {
     name: "nombre",
     align: "center",
-    label: "Nombre",
+    label: "Municipio",
     field: "nombre",
     sortable: true,
   },

@@ -85,6 +85,7 @@ const actualizarModal = (valor) => {
   $q.loading.show();
   paisesPueblosStore.actualizarModalGrupo(valor);
   paisesPueblosStore.updateEditar(valor);
+  paisesPueblosStore.initGrupo();
   $q.loading.hide();
 };
 

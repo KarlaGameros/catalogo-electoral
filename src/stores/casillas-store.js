@@ -60,6 +60,12 @@ export const useCasillasStore = defineStore("useCasillasStore", {
       this.casilla.seccion_Id = null;
     },
 
+    initTipoCasilla() {
+      this.tipo_casilla.id = null;
+      this.tipo_casilla.nombre = null;
+      this.tipo_casilla.siglas = null;
+    },
+
     //----------------------------------------------------------------------
     //GET ALL TIPO CASILLAS
     async loadTipoCasillas() {
@@ -307,6 +313,32 @@ export const useCasillasStore = defineStore("useCasillasStore", {
           return {
             success: false,
             data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //DELETE CASILLA
+    async deleteCasilla(id) {
+      try {
+        const resp = await api.delete(`/Casillas/${id}`);
+        if (resp.status == 200) {
+          let { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrio un error, intentelo de nuevo",
           };
         }
       } catch (error) {

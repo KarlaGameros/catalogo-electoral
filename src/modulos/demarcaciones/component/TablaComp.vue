@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Editar demarcación</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -45,13 +47,11 @@
               </q-btn>
             </div>
             <div v-else-if="col.name === 'indigena'">
-              <q-btn
-                flat
-                round
+              <q-icon
+                size="sm"
                 :color="props.row.indigena == true ? 'green' : 'red'"
-                :icon="props.row.indigena == true ? 'done' : 'close'"
-              >
-              </q-btn>
+                :name="props.row.indigena == true ? 'done' : 'close'"
+              />
             </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
@@ -64,6 +64,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
+import { useAuthStore } from "src/stores/auth-store";
 import { onBeforeMount, ref } from "vue";
 import { useDemarcacionesStore } from "../../../stores/demarcaciones-store";
 
@@ -71,15 +72,25 @@ import { useDemarcacionesStore } from "../../../stores/demarcaciones-store";
 
 const $q = useQuasar();
 const demarcacionesStore = useDemarcacionesStore();
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
 const { list_Demarcaciones } = storeToRefs(demarcacionesStore);
+const siglas = "SCE-CAT-DE";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   demarcacionesStore.loadDemarcaciones();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {
@@ -92,7 +103,7 @@ const columns = [
   {
     name: "nombre",
     align: "center",
-    label: "Nombre",
+    label: "Demarcación",
     field: "nombre",
     sortable: true,
   },

@@ -27,6 +27,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -36,6 +37,7 @@
                 <q-tooltip>Editar pregunta</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -45,6 +47,7 @@
                 <q-tooltip>Eliminar pregunta</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.registrar"
                 flat
                 round
                 color="pink"
@@ -76,20 +79,31 @@ import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { onBeforeMount, ref } from "vue";
 import { useConocelesStore } from "src/stores/conoceles-store";
+import { useAuthStore } from "src/stores/auth-store";
 
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
 const conocelesStore = useConocelesStore();
 const { list_Preguntas_Identidad } = storeToRefs(conocelesStore);
+const authStore = useAuthStore();
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-PRE-ID";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   conocelesStore.loadPreguntasIdentidad();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
 
 const columns = [
   {

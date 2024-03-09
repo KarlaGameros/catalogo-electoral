@@ -86,7 +86,7 @@
 
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model.trim="opcion"
+              v-model.trim="opcion.opcion"
               label="Opción"
               hint="Ingrese la opción de la respuesta"
               autogrow
@@ -98,7 +98,7 @@
               color="pink"
               size="lg"
               left-label
-              v-model="otro"
+              v-model="opcion.otro"
               label="¿Tiene la opción de otro?"
               checked-icon="task_alt"
               unchecked-icon="highlight_off"
@@ -107,9 +107,10 @@
           <div class="col-12 justify-end">
             <div class="text-right q-gutter-xs">
               <q-btn
+                :disable="opcion.opcion == null || opcion.opcion == ''"
                 color="secondary"
-                icon="add"
-                label="Agregar"
+                :icon="isEditar == true ? 'edit' : 'add'"
+                :label="isEditar == true ? 'Editar' : 'Agregar'"
                 @click="agregarOpcion()"
               />
             </div>
@@ -138,7 +139,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useConocelesStore } from "src/stores/conoceles-store";
@@ -148,11 +149,10 @@ import TablaRespuestasComp from "./TablaRespuestasComp.vue";
 
 const $q = useQuasar();
 const conocelesStore = useConocelesStore();
-const { modal, isEditar, pregunta, list_Preguntas_Identidad, opcionPregunta } =
+const { modal, isEditar, pregunta, list_Preguntas_Identidad, opcion } =
   storeToRefs(conocelesStore);
-const otro = ref(false);
-const opcion = ref(null);
 const numero = ref(null);
+
 //-----------------------------------------------------------
 
 watch(list_Preguntas_Identidad, (val) => {
@@ -160,26 +160,27 @@ watch(list_Preguntas_Identidad, (val) => {
   numero.value = last + 1;
 });
 
+//-----------------------------------------------------------
+
 const actualizarModal = (valor) => {
   $q.loading.show();
   conocelesStore.actualizarModal(valor);
   conocelesStore.updateEditar(false);
   conocelesStore.initPregunta();
-  opcion.value = null;
-  otro.value = false;
+  conocelesStore.initOpcion();
   $q.loading.hide();
 };
 
 const agregarOpcion = async () => {
   $q.loading.show();
   let resp = null;
+
   if (isEditar.value == true) {
-    opcionPregunta.value.opcion = opcion.value;
-    opcionPregunta.value.otro = otro.value;
-    resp = await conocelesStore.createOpcion(
-      opcionPregunta.value,
-      pregunta.value.id
-    );
+    if (opcion.value.id == null) {
+      resp = await conocelesStore.createOpcion(opcion.value);
+    } else {
+      resp = await conocelesStore.updateOpcion(opcion.value);
+    }
     if (resp.success) {
       $q.notify({
         position: "top-right",
@@ -195,10 +196,9 @@ const agregarOpcion = async () => {
       });
     }
   } else {
-    conocelesStore.addOpcion(opcion.value, otro.value);
+    conocelesStore.addOpcion(opcion.value.opcion, opcion.value.otro);
   }
-  opcion.value = null;
-  otro.value = false;
+  conocelesStore.initOpcion();
   $q.loading.hide();
 };
 

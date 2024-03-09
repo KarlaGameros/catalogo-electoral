@@ -22,7 +22,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     opciones: [],
     opcionPregunta: {
       opcion: null,
-      otro: null,
+      otro: false,
     },
     rubro: {
       id: null,
@@ -48,6 +48,12 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     subOpcion: {
       sub_Opcion: null,
       opcion_Id: null,
+    },
+    opcion: {
+      id: null,
+      pregunta_Id: null,
+      opcion: null,
+      otro: false,
     },
   }),
   actions: {
@@ -78,6 +84,12 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     initSubOpcion() {
       this.subOpcion.opcion_Id = null;
       this.subOpcion.sub_Opcion = null;
+    },
+
+    initOpcion() {
+      this.opcion.id = null;
+      this.opcion.opcion = null;
+      this.opcion.otro = false;
     },
 
     //----------------------------------------------------------------------
@@ -275,6 +287,31 @@ export const useConocelesStore = defineStore("useConocelesStore", {
       }
     },
 
+    //----------------------------------------------------------------------
+    //UPDATE OPCION
+    async updateOpcion(opcion) {
+      try {
+        const resp = await api.put(`/OpcionesPreguntas/${opcion.id}`, opcion);
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
     //----------------------------------------------------------------------
     //GET RESPUESTA
     async loadOpcion(id) {

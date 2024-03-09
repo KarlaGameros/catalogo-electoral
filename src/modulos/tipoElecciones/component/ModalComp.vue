@@ -49,12 +49,55 @@
           <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <q-checkbox
               color="pink"
+              right-label
               v-model="eleccion.activo"
-              label="Activo?"
+              label="¿Activo?"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
+            />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <q-checkbox
+              color="pink"
+              right-label
+              v-model="eleccion.propietario_1"
+              label="Propietario 1"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
+            />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <q-checkbox
+              color="pink"
+              right-label
+              v-model="eleccion.suplente_1"
+              label="Suplente 1"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
+            />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <q-checkbox
+              color="pink"
+              right-label
+              v-model="eleccion.propietario_2"
+              label="Propietario 2"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
+            />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <q-checkbox
+              color="pink"
+              right-label
+              v-model="eleccion.suplente_2"
+              label="Suplente 2"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
             />
           </div>
 
-          <div class="col-12 justify-end">
+          <div class="col-12 justify-end q-pt-lg">
             <div class="text-right q-gutter-xs">
               <q-btn
                 label="Cancelar"

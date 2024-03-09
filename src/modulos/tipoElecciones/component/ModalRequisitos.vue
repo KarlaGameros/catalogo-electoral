@@ -135,7 +135,7 @@ const onSubmit = async () => {
       message: resp.data,
     });
     eleccionesStore.loadRequisitos(requisistos.value.tipo_Eleccion_Id);
-    actualizarModal(false);
+    eleccionesStore.initRequisitos();
   } else {
     $q.notify({
       position: "top-right",

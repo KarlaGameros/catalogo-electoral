@@ -26,6 +26,7 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
@@ -35,6 +36,7 @@
                 <q-tooltip>Editar demarcación</q-tooltip>
               </q-btn>
               <q-btn
+                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
@@ -56,6 +58,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
+import { useAuthStore } from "src/stores/auth-store";
 import { onBeforeMount, ref } from "vue";
 import { useSeccionesStore } from "../../../stores/secciones-store";
 
@@ -63,15 +66,26 @@ import { useSeccionesStore } from "../../../stores/secciones-store";
 
 const $q = useQuasar();
 const seccionesStore = useSeccionesStore();
+const authStore = useAuthStore();
 const { list_Secciones } = storeToRefs(seccionesStore);
+const { modulo } = storeToRefs(authStore);
+const siglas = "SCE-CAT-SE";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
   seccionesStore.loadSecciones();
+  leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const leerPermisos = async () => {
+  $q.loading.show();
+  await authStore.loadModulo(siglas);
+  $q.loading.hide();
+};
+
 const editar = async (id) => {
   $q.loading.show();
   await seccionesStore.loadSeccion(id);
