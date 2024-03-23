@@ -28,8 +28,8 @@
               <q-btn
                 flat
                 round
-                :color="props.row.archivo == true ? 'green' : 'red'"
-                :icon="props.row.archivo == true ? 'done' : 'close'"
+                :color="col.value == true ? 'green' : 'red'"
+                :icon="col.value == true ? 'done' : 'close'"
               >
               </q-btn>
             </div>
@@ -37,8 +37,8 @@
               <q-btn
                 flat
                 round
-                :color="props.row.genero == true ? 'green' : 'red'"
-                :icon="props.row.genero == true ? 'done' : 'close'"
+                :color="col.value == true ? 'green' : 'red'"
+                :icon="col.value == true ? 'done' : 'close'"
               >
               </q-btn>
             </div>
@@ -46,8 +46,17 @@
               <q-btn
                 flat
                 round
-                :color="props.row.activo == true ? 'green' : 'red'"
-                :icon="props.row.activo == true ? 'done' : 'close'"
+                :color="col.value == true ? 'green' : 'red'"
+                :icon="col.value == true ? 'done' : 'close'"
+              >
+              </q-btn>
+            </div>
+            <div v-else-if="col.name === 'obligatorio'">
+              <q-btn
+                flat
+                round
+                :color="col.value == true ? 'green' : 'red'"
+                :icon="col.value == true ? 'done' : 'close'"
               >
               </q-btn>
             </div>
@@ -116,6 +125,13 @@ const columns = [
     align: "center",
     label: "Activo",
     field: "activo",
+    sortable: true,
+  },
+  {
+    name: "obligatorio",
+    align: "center",
+    label: "Obligatorio",
+    field: "obligatorio",
     sortable: true,
   },
   {

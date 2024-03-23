@@ -41,7 +41,7 @@
             >
             </q-input>
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center">
             <q-checkbox
               color="pink"
               v-model="requisistos.archivo"
@@ -50,7 +50,7 @@
               unchecked-icon="highlight_off"
             />
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center">
             <q-checkbox
               color="pink"
               v-model="requisistos.genero"
@@ -59,11 +59,20 @@
               unchecked-icon="highlight_off"
             />
           </div>
-          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center">
             <q-checkbox
               color="pink"
               v-model="requisistos.activo"
               label="Activar requisito"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
+            />
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 text-center">
+            <q-checkbox
+              color="pink"
+              v-model="requisistos.obligatorio"
+              label="Obligatorio"
               checked-icon="task_alt"
               unchecked-icon="highlight_off"
             />

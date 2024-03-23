@@ -36,7 +36,11 @@
                 <q-tooltip>Agregar integracón</q-tooltip>
               </q-btn>
               <q-btn
-                v-if="modulo == null ? false : modulo.registrar"
+                v-if="
+                  modulo == null
+                    ? false
+                    : modulo.registrar && props.row.comun == false
+                "
                 flat
                 round
                 color="pink"
@@ -74,6 +78,15 @@
               >
                 <img :src="props.row.logo_URL" alt="" />
               </q-avatar>
+            </div>
+            <div v-else-if="col.name === 'comun'">
+              <q-btn
+                flat
+                round
+                :color="props.row.comun == true ? 'green' : 'red'"
+                :icon="props.row.comun == true ? 'done' : 'close'"
+              >
+              </q-btn>
             </div>
             <div v-else-if="col.name === 'activo'">
               <q-btn
@@ -150,6 +163,13 @@ const columns = [
     align: "center",
     label: "Orden",
     field: "orden",
+    sortable: true,
+  },
+  {
+    name: "comun",
+    align: "center",
+    label: "Común",
+    field: "comun",
     sortable: true,
   },
   {

@@ -16,9 +16,11 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
       siglas: null,
       logo_URL: null,
       orden: null,
+      comun: null,
     },
     integracion: {
       partido_Id: null,
+      porcentaje: null,
     },
   }),
   actions: {
@@ -34,6 +36,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
 
     initIntegracion() {
       this.integracion.partido_Id = null;
+      this.integracion.porcentaje = null;
     },
 
     //----------------------------------------------------------------------
@@ -50,6 +53,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
             logo_URL: coalicion.logo_URL,
             orden: coalicion.orden,
             activo: coalicion.activo,
+            comun: coalicion.comun,
           };
         });
         this.list_Coaliciones = listCoaliciones;
@@ -75,6 +79,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
             this.coalicion.siglas = data.siglas;
             this.coalicion.logo_URL = data.logo_URL;
             this.coalicion.orden = data.orden;
+            this.coalicion.comun = data.comun;
           }
         }
       } catch (error) {
@@ -209,6 +214,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
             coalicion: partido.coalicion,
             partido: partido.partido,
             partido_Id: partido.partido_Id,
+            porcentaje: partido.porcentaje,
           };
         });
         this.list_Integracion = listIntegracion;

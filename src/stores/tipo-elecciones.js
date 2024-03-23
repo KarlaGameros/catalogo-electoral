@@ -27,6 +27,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       archivo: false,
       genero: false,
       activo: false,
+      obligatorio: false,
     },
   }),
   actions: {
@@ -228,9 +229,11 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
           return {
             id: requisito.id,
             nombre: requisito.nombre,
+            descripcion: requisito.descripcion,
             genero: requisito.genero,
             activo: requisito.activo,
             archivo: requisito.archivo,
+            obligatorio: requisito.obligatorio,
           };
         });
         this.list_Requisitos = listRequisitos;
@@ -257,6 +260,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
             this.requisistos.archivo = data.archivo;
             this.requisistos.genero = data.genero;
             this.requisistos.activo = data.activo;
+            this.requisistos.descripcion = data.descripcion;
           }
         }
       } catch (error) {

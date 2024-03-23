@@ -109,8 +109,8 @@
               <q-btn
                 :disable="opcion.opcion == null || opcion.opcion == ''"
                 color="secondary"
-                :icon="isEditar == true ? 'edit' : 'add'"
-                :label="isEditar == true ? 'Editar' : 'Agregar'"
+                :icon="opcion.id != null ? 'edit' : 'add'"
+                :label="opcion.id != null ? 'Editar' : 'Agregar'"
                 @click="agregarOpcion()"
               />
             </div>
@@ -159,7 +159,6 @@ watch(list_Preguntas_Identidad, (val) => {
   let last = list_Preguntas_Identidad.value.length;
   numero.value = last + 1;
 });
-
 //-----------------------------------------------------------
 
 const actualizarModal = (valor) => {
@@ -177,7 +176,7 @@ const agregarOpcion = async () => {
 
   if (isEditar.value == true) {
     if (opcion.value.id == null) {
-      resp = await conocelesStore.createOpcion(opcion.value);
+      resp = await conocelesStore.createOpcion(opcion.value, pregunta.value.id);
     } else {
       resp = await conocelesStore.updateOpcion(opcion.value);
     }

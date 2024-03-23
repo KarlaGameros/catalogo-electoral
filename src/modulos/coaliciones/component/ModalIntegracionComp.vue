@@ -27,7 +27,7 @@
 
       <q-form class="q-col-gutter-xs" @submit="onSubmit">
         <q-card-section class="row q-pl-md">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 q-pr-sm">
             <q-select
               v-model.trim="partido_Id"
               :options="list_Partidos_Politicos"
@@ -37,6 +37,22 @@
               :rules="[(val) => !!val || 'El actor político es requerido']"
             >
             </q-select>
+          </div>
+          <div
+            v-if="coalicion.comun == true"
+            class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
+          >
+            <q-input
+              type="number"
+              v-model.number="porcentaje"
+              label="Porcentaje de participación"
+              hint="Ingrese porcentaje de participación"
+              lazy-rules
+              :rules="[
+                (val) => !!val || 'El porcentahe de participación es requerido',
+              ]"
+            >
+            </q-input>
           </div>
         </q-card-section>
         <q-card-section class="q-pa-md">
@@ -82,6 +98,7 @@ const { modalIntegracion, integracion, coalicion, isEditar, list_Integracion } =
   storeToRefs(coalicionStore);
 const { list_Partidos_Politicos } = storeToRefs(partidosPoliticosStore);
 const partido_Id = ref(null);
+const porcentaje = ref(null);
 
 //-----------------------------------------------------------
 
@@ -96,9 +113,12 @@ const actualizarModal = (valor) => {
 };
 
 const onSubmit = async () => {
+  $q.loading.show();
   let resp = null;
   integracion.value.partido_Id = partido_Id.value.value;
-  $q.loading.show();
+  if (coalicion.value.comun == true) {
+    integracion.value.porcentaje = porcentaje.value;
+  }
   let filtro = list_Integracion.value.find(
     (x) => x.partido_Id == partido_Id.value.value
   );
@@ -116,6 +136,7 @@ const onSubmit = async () => {
       coalicionStore.loadCoaliciones();
       coalicionStore.loadIntegracionesByCoalicion(coalicion.value.id);
       partido_Id.value = null;
+      porcentaje.value = null;
     } else {
       $q.notify({
         position: "top-right",

@@ -34,7 +34,7 @@
             >
             </q-input>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <q-input
               v-model.trim="coalicion.siglas"
               label="Siglas"
@@ -44,6 +44,24 @@
               :rules="[(val) => !!val || 'Las siglas son requeridas']"
             >
             </q-input>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+            <q-radio
+              color="pink"
+              v-model="comun"
+              checked-icon="task_alt"
+              unchecked-icon="panorama_fish_eye"
+              val="comun"
+              label="Comúm"
+            />
+            <q-radio
+              color="pink"
+              v-model="comun"
+              checked-icon="task_alt"
+              unchecked-icon="panorama_fish_eye"
+              val="coalicion"
+              label="Coalición"
+            />
           </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-file
@@ -107,7 +125,7 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { useCoalicionesStore } from "src/stores/coaliciones-store";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 //-----------------------------------------------------------
 
@@ -115,8 +133,15 @@ const $q = useQuasar();
 const coalicionStore = useCoalicionesStore();
 const { modal, isEditar, coalicion } = storeToRefs(coalicionStore);
 const logo_URL = ref(null);
+const comun = ref(null);
 
 //-----------------------------------------------------------
+
+watch(coalicion.value, (val) => {
+  if (val != null) {
+    comun.value = val.comun == true ? "comun" : "coalicion";
+  }
+});
 
 const actualizarModal = (valor) => {
   coalicionStore.actualizarModal(valor);
@@ -127,38 +152,55 @@ const actualizarModal = (valor) => {
 };
 
 const onSubmit = async () => {
-  let coalicionFormData = new FormData();
-  coalicionFormData.append("Nombre", coalicion.value.nombre);
-  coalicionFormData.append("Siglas", coalicion.value.siglas);
-  coalicionFormData.append("Logo", logo_URL.value);
-  coalicionFormData.append("Orden", coalicion.value.orden);
+  if (comun.value == null) {
+    $q.dialog({
+      title: "Campos incompletos",
+      message: "Seleccione si es común o coalición",
+      icon: "Warning",
+      persistent: true,
+      transitionShow: "scale",
+      transitionHide: "scale",
+      ok: false,
+      cancel: {
+        color: "negative",
+        label: "Cerrar",
+      },
+    });
+  } else {
+    let coalicionFormData = new FormData();
+    coalicionFormData.append("Nombre", coalicion.value.nombre);
+    coalicionFormData.append("Siglas", coalicion.value.siglas);
+    coalicionFormData.append("Logo", logo_URL.value);
+    coalicionFormData.append("Orden", coalicion.value.orden);
+    coalicionFormData.append("Comun", comun.value == "comun" ? true : false);
 
-  let resp = null;
-  $q.loading.show();
-  if (isEditar.value == true) {
-    resp = await coalicionStore.updateCoalicion(
-      coalicion.value.id,
-      coalicionFormData
-    );
-  } else {
-    resp = await coalicionStore.createCoalicion(coalicionFormData);
+    let resp = null;
+    $q.loading.show();
+    if (isEditar.value == true) {
+      resp = await coalicionStore.updateCoalicion(
+        coalicion.value.id,
+        coalicionFormData
+      );
+    } else {
+      resp = await coalicionStore.createCoalicion(coalicionFormData);
+    }
+    if (resp.success) {
+      $q.notify({
+        position: "top-right",
+        type: "positive",
+        message: resp.data,
+      });
+      coalicionStore.loadCoaliciones();
+      actualizarModal(false);
+    } else {
+      $q.notify({
+        position: "top-right",
+        type: "negative",
+        message: resp.data,
+      });
+    }
+    $q.loading.hide();
   }
-  if (resp.success) {
-    $q.notify({
-      position: "top-right",
-      type: "positive",
-      message: resp.data,
-    });
-    coalicionStore.loadCoaliciones();
-    actualizarModal(false);
-  } else {
-    $q.notify({
-      position: "top-right",
-      type: "negative",
-      message: resp.data,
-    });
-  }
-  $q.loading.hide();
 };
 </script>
 
