@@ -6,6 +6,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
     modal: false,
     modalIntegracion: false,
     modalCombinaciones: false,
+    modalLogoMasivo: false,
     isEditar: false,
     list_Coaliciones: [],
     list_Integracion: [],
@@ -16,7 +17,6 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
       siglas: null,
       logo_URL: null,
       orden: null,
-      comun: null,
     },
     integracion: {
       partido_Id: null,
@@ -53,7 +53,6 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
             logo_URL: coalicion.logo_URL,
             orden: coalicion.orden,
             activo: coalicion.activo,
-            comun: coalicion.comun,
           };
         });
         this.list_Coaliciones = listCoaliciones;
@@ -79,7 +78,6 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
             this.coalicion.siglas = data.siglas;
             this.coalicion.logo_URL = data.logo_URL;
             this.coalicion.orden = data.orden;
-            this.coalicion.comun = data.comun;
           }
         }
       } catch (error) {
@@ -264,7 +262,7 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
               id: combinacion.id,
               coalicion_Id: combinacion.coalicion_Id,
               combinacion: combinacion.combinacion,
-              logo_Url: combinacion.partido,
+              logo_Url: combinacion.logo_Url,
             };
           });
           this.list_Combinaciones = listCombinacion;
@@ -304,6 +302,39 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
     },
 
     //----------------------------------------------------------------------
+    //SUBIR LOGOS
+    async subirLogosMasivo(logos) {
+      try {
+        const resp = await api.post(
+          "/Coaliciones/Agregar_Logo_Combinaciones_Masivo",
+          logos,
+          {
+            headers: {
+              "Conten-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (resp.status == 200) {
+          const { success, data } = resp.data;
+          if (success === true) {
+            return { success, data };
+          } else {
+            return { success, data };
+          }
+        } else {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+    //----------------------------------------------------------------------
     actualizarModal(valor) {
       this.modal = valor;
     },
@@ -314,6 +345,10 @@ export const useCoalicionesStore = defineStore("useCoalicionesStore", {
 
     actualizarModalCombinaciones(valor) {
       this.modalCombinaciones = valor;
+    },
+
+    actualizarModalLogoMasivo(valor) {
+      this.modalLogoMasivo = valor;
     },
 
     updateEditar(valor) {

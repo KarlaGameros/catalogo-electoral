@@ -9,6 +9,7 @@ export const useAuthStore = defineStore("auth", {
     sistemas: [],
     apps: [],
     modulo: null,
+    usuario_Nombre: null,
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
@@ -34,7 +35,10 @@ export const useAuthStore = defineStore("auth", {
                 return {
                   id: app.sistema_Id,
                   label: app.sistema,
-                  avatar: app.logo_Url,
+                  avatar:
+                    app.logo_Url == null
+                      ? "https://api.sistemas-ieenayarit.org/Imagenes/Sistemas/67cfdabe-0538-4324-b711-93bcb6cb9a60.png"
+                      : app.logo_Url,
                   url: app.url,
                 };
               });
@@ -42,14 +46,14 @@ export const useAuthStore = defineStore("auth", {
                 id: 0,
                 label: "Cerrar sesión",
                 avatar:
-                  "http://sistema.ieenayarit.org:9170/Imagenes/Sistemas/dbb9640f-dd18-4fc3-b530-7041d8594240.png",
+                  "https://api.sistemas-ieenayarit.org/Imagenes/Sistemas/dbb9640f-dd18-4fc3-b530-7041d8594240.png",
                 url: "",
               };
               const universoIEEN = {
                 id: 0,
                 label: "Ir a universo",
                 avatar:
-                  "http://sistema.ieenayarit.org:9170/Imagenes/Sistemas/67cfdabe-0538-4324-b711-93bcb6cb9a60.png",
+                  "https://api.sistemas-ieenayarit.org/Imagenes/Sistemas/67cfdabe-0538-4324-b711-93bcb6cb9a60.png",
                 url: "",
               };
 
@@ -132,6 +136,19 @@ export const useAuthStore = defineStore("auth", {
           (x) => x.sistema_Id == parseInt(localStorage.getItem("sistema"))
         );
         localStorage.setItem("perfil", filtro.perfil_Id);
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    async loadUsuario() {
+      try {
+        const resp = await api.get("/Oficinas/GetUsuario");
+        let { data } = resp.data;
+        this.usuario_Nombre = data.nombre_Completo;
       } catch (error) {
         return {
           success: false,

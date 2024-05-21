@@ -74,6 +74,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     },
 
     initVariable() {
+      this.variable.id = null;
       this.variable.variable = null;
       this.variable.tipo = null;
       this.variable.descripcion = null;
@@ -312,6 +313,7 @@ export const useConocelesStore = defineStore("useConocelesStore", {
         };
       }
     },
+
     //----------------------------------------------------------------------
     //GET RESPUESTA
     async loadOpcion(id) {
@@ -582,6 +584,21 @@ export const useConocelesStore = defineStore("useConocelesStore", {
     async limpiarCache() {
       try {
         let resp = await apiConoceles.get("/Tipos_Elecciones/Borrar_Cache");
+        let { data, success } = resp;
+        return success, data;
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
+    //NUMERO DE FORMULA
+    async asignarNoFormula() {
+      try {
+        let resp = await api.get("/Candidatos/Asignar_No_Formula");
         let { data, success } = resp;
         return success, data;
       } catch (error) {

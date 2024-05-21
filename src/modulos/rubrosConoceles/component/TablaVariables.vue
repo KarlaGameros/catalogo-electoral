@@ -35,6 +35,15 @@
               >
                 <q-tooltip>Editar</q-tooltip>
               </q-btn>
+              <!-- <q-btn
+                flat
+                round
+                color="pink"
+                icon="delete"
+                @click="eliminar(col.value)"
+              >
+                <q-tooltip>Eliminar</q-tooltip>
+              </q-btn> -->
             </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
@@ -119,8 +128,12 @@ const pagination = ref({
   rowsPerPage: 5,
 });
 
+const eliminar = async (id) => {
+  await conocelesStore.deleteVariable(id);
+};
+
 const editar = async (id) => {
-  conocelesStore.loadVariableById(id);
+  await conocelesStore.loadVariableById(id);
   conocelesStore.updateEditarVariable(true);
 };
 //-------------------------------------------------------------------

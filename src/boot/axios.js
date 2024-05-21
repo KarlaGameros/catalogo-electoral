@@ -9,13 +9,47 @@ import axios from "axios";
 // "export default () => {}" function below (which runs individually
 // for each client)
 const encryptStorage = new EncryptStorage("SECRET_KEY", "sessionStorage");
+//------ELETORAL------
 const api = axios.create({
-  baseURL: "http://sistema.ieenayarit.org:9370/api",
+  //baseURL: "http://sistema.ieenayarit.org:9370/api",
+  baseURL: "https://a050-44-220-242-27.ngrok-free.app/api",
 });
-
 const apiConoceles = axios.create({
   baseURL: "http://sistema.ieenayarit.org:9378/api",
 });
+
+//------PRODUCCION------
+// const api = axios.create({
+//   baseURL: "http://sistema.ieenayarit.org:9470/api",
+// });
+// const apiConoceles = axios.create({
+//   baseURL: "http://sistema.ieenayarit.org:9478/api",
+// });
+
+//------SIMULACROS-----
+// const api = axios.create({
+//   baseURL: "http://sistema.ieenayarit.org:9670/api",
+// });
+// const apiConoceles = axios.create({
+//   baseURL: "http://sistema.ieenayarit.org:9678/api",
+// });
+
+//-----SIMULACRO PRUEBAS----
+// const api = axios.create({
+//   baseURL: "https://ieen.c5qocwcce22m.us-east-1.rds.amazonaws.com/9674",
+// });
+// const apiConoceles = axios.create({
+//   baseURL: "https://ieen.c5qocwcce22m.us-east-1.rds.amazonaws.com/9678",
+// });
+
+//-----SIMULACRO PRODUCCION----
+// const api = axios.create({
+//   baseURL: "https://7c4b-177-226-124-12.ngrok-free.app/api",
+//   //baseURL: "https://api.sistemas-ieenayarit.org/api",
+// });
+// const apiConoceles = axios.create({
+//   baseURL: "https://apiconoceles.sistemas-ieenayarit.org/api",
+// });
 
 api.interceptors.request.use((config) => {
   config.headers = {
@@ -29,8 +63,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response.status == 401) {
       alert("Su sesión ha expirado, sera redireccionado al logín");
-      window.localStorage.clear();
-      window.location = "http://sistema.ieenayarit.org:9371?return=false";
+      window.sessionStorage.clear();
+      window.location = "https://acceso.sistemas-ieenayarit.org";
     }
     return Promise.reject();
   }

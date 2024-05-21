@@ -33,7 +33,7 @@
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar pais</q-tooltip>
+                <q-tooltip>Editar</q-tooltip>
               </q-btn>
               <q-btn
                 v-if="modulo == null ? false : modulo.eliminar"
@@ -43,7 +43,7 @@
                 icon="delete"
                 @click="eliminar(col.value)"
               >
-                <q-tooltip>Eliminar pais</q-tooltip>
+                <q-tooltip>Eliminar</q-tooltip>
               </q-btn>
             </div>
             <label v-else>{{ col.value }}</label>

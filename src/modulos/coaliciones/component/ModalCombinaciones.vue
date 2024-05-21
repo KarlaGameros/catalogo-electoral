@@ -68,7 +68,7 @@
                   <div class="col-xs-12 col-sm-6 col-md-4">
                     <q-card class="no-shadow" bordered>
                       <q-card-section class="text-center">
-                        <q-avatar rounded font-size="82px" class="shadow-10">
+                        <q-avatar rounded style="width: auto" class="shadow-10">
                           <img :src="props.row.logo_Url" />
                         </q-avatar>
                       </q-card-section>
@@ -118,6 +118,13 @@ const { modalCombinaciones, list_Combinaciones, coalicion } =
 //-----------------------------------------------------------
 
 const actualizarModal = (valor) => {
+  pagination.value = {
+    sortBy: "desc",
+    descending: false,
+    page: 1,
+    rowsPerPage: 6,
+  };
+  coalicionStore.initCoalicion();
   coalicionStore.actualizarModalCombinaciones(valor);
 };
 
@@ -149,7 +156,6 @@ const pagination = ref({
 
 const combinaciones = async (id) => {
   $q.loading.show();
-
   $q.dialog({
     title: "¿Está seguro de generar las combinaciones?",
     message: "Se borrarán las anteriores",
@@ -190,5 +196,3 @@ const combinaciones = async (id) => {
   $q.loading.hide();
 };
 </script>
-
-<style></style>

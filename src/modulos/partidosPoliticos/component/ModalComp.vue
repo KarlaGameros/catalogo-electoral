@@ -47,7 +47,7 @@
             >
             </q-input>
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+          <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
             <q-file
               bottom-slots
               v-model="logo_URL"
@@ -71,12 +71,23 @@
               <template v-slot:hint> Logo </template>
             </q-file>
           </div>
-          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+          <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
             <q-input
               v-model.number="partido.prioridad"
               type="number"
               label="Prioridad"
               hint="Ingrese la prioridad"
+              lazy-rules
+              :rules="[(val) => !!val || 'La campo es requerido']"
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <q-input
+              v-model.number="partido.orden_Publicacion"
+              type="number"
+              label="Orden publicación"
+              hint="Ingrese orden de publicación"
               lazy-rules
               :rules="[(val) => !!val || 'La campo es requerido']"
             >
@@ -89,10 +100,16 @@
               label="Es independiente"
             />
           </div>
+          <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+            <q-checkbox
+              color="pink"
+              v-model="partido.is_Comun"
+              label="Es común"
+            />
+          </div>
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
               v-model="partido.pantone_Letra"
-              :rules="['anyColor']"
               hint="Ingrese el pantone letra"
               class="my-input"
             >
@@ -112,7 +129,6 @@
           <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
               v-model="partido.pantone_Fondo"
-              :rules="['anyColor']"
               hint="Ingrese el pantone fondo"
               class="my-input"
             >
@@ -156,7 +172,7 @@
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { usePartidosPoliticosStore } from "src/stores/partidos-politicos-store";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 //-----------------------------------------------------------
 
@@ -167,6 +183,7 @@ const logo_URL = ref(null);
 
 //-----------------------------------------------------------
 const actualizarModal = (valor) => {
+  logo_URL.value = null;
   partidosStore.actualizarModal(valor);
   partidosStore.updateEditar(valor);
   partidosStore.initPartido();
@@ -181,7 +198,8 @@ const onSubmit = async () => {
   partidoFormData.append("Prioridad", partido.value.prioridad);
   partidoFormData.append("Pantone_Fondo", partido.value.pantone_Fondo);
   partidoFormData.append("Pantona_Letra", partido.value.pantone_Letra);
-
+  partidoFormData.append("Is_Comun", partido.value.is_Comun);
+  partidoFormData.append("Orden_Publicacion", partido.value.orden_Publicacion);
   let resp = null;
   $q.loading.show();
   if (isEditar.value == true) {

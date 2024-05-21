@@ -121,6 +121,7 @@ onBeforeMount(() => {
 const actualizarModal = (valor) => {
   $q.loading.show();
   eleccionesStore.actualizarModalRequisitos(valor);
+  eleccionesStore.updateEditar(false);
   eleccionesStore.initRequisitos();
   $q.loading.hide();
 };

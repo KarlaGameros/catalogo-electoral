@@ -26,6 +26,20 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
+                v-if="
+                  modulo == null
+                    ? false
+                    : modulo.actualizar && props.row.comun_Padre == true
+                "
+                flat
+                round
+                color="pink"
+                icon="add_circle"
+                @click="addIntegracionComun(col.value)"
+              >
+                <q-tooltip>Agregar integración</q-tooltip>
+              </q-btn>
+              <q-btn
                 v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
@@ -60,6 +74,13 @@
                 size="sm"
                 :color="props.row.independiente == true ? 'green' : 'red'"
                 :name="props.row.independiente == true ? 'done' : 'close'"
+              />
+            </div>
+            <div v-else-if="col.name === 'is_Comun'">
+              <q-icon
+                size="sm"
+                :color="col.value == true ? 'green' : 'red'"
+                :name="col.value == true ? 'done' : 'close'"
               />
             </div>
             <div v-else-if="col.name === 'pantone_Fondo'">
@@ -158,6 +179,20 @@ const columns = [
     sortable: true,
   },
   {
+    name: "orden_Publicacion",
+    align: "center",
+    label: "Orden de publicación",
+    field: "orden_Publicacion",
+    sortable: true,
+  },
+  {
+    name: "is_Comun",
+    align: "center",
+    label: "Común",
+    field: "is_Comun",
+    sortable: true,
+  },
+  {
     name: "pantone_Fondo",
     align: "center",
     label: "Pantone fondo",
@@ -183,13 +218,20 @@ const columns = [
 const filter = ref("");
 
 const pagination = ref({
-  sortBy: "desc",
-  descending: false,
   page: 1,
   rowsPerPage: 5,
 });
 
 //-------------------------------------------------------------------
+
+const addIntegracionComun = async (id) => {
+  $q.loading.show();
+  await partidosStore.loadPartdio(id);
+  await partidosStore.loadComun(id);
+  partidosStore.actualizarModalIntegracion(true);
+  $q.loading.hide();
+};
+
 const editar = async (id) => {
   $q.loading.show();
   await partidosStore.loadPartdio(id);

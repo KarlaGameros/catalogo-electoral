@@ -5,7 +5,7 @@
         <div class="q-gutter-sm">
           <q-breadcrumbs>
             <q-breadcrumbs-el icon="home" to="/" />
-            <q-breadcrumbs-el icon="list_alt" label="Partidos políticos" />
+            <q-breadcrumbs-el icon="list_alt" label="Preguntas" />
           </q-breadcrumbs>
         </div>
       </div>

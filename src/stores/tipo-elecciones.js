@@ -13,6 +13,14 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       nombre: null,
       fecha_Registro: null,
       activo: false,
+      correo: null,
+      contrasena: null,
+      smtp: null,
+      puerto: null,
+      correo_RP: null,
+      contrasena_RP: null,
+      puerto_RP: null,
+      smtp_RP: null,
       propietario_1: false,
       propietario_2: false,
       suplente_1: false,
@@ -43,6 +51,14 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       this.eleccion.propietario_2 = false;
       this.eleccion.suplente_1 = false;
       this.eleccion.suplente_2 = false;
+      this.eleccion.correo = null;
+      this.eleccion.contrasena = null;
+      this.eleccion.puerto = null;
+      this.eleccion.smtp = null;
+      this.eleccion.contrasena_RP = null;
+      this.eleccion.contrasena_RP = null;
+      this.eleccion.puerto_RP = null;
+      this.eleccion.smtp_RP = null;
     },
 
     initRequisitos() {
@@ -53,6 +69,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
       this.requisistos.archivo = false;
       this.requisistos.genero = false;
       this.requisistos.activo = false;
+      this.requisistos.obligatorio = false;
     },
 
     //----------------------------------------------------------------------
@@ -68,6 +85,8 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
             nombre: eleccion.nombre,
             fecha_Registro: eleccion.fecha_Registro,
             activo: eleccion.activo,
+            value: eleccion.id,
+            label: eleccion.nombre,
           };
         });
         this.list_Tipos_Elecciones = listElecciones;
@@ -97,6 +116,14 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
             this.eleccion.propietario_2 = data.propietario_2;
             this.eleccion.suplente_1 = data.suplente_1;
             this.eleccion.suplente_2 = data.suplente_2;
+            this.eleccion.correo = data.correo;
+            this.eleccion.contrasena = data.contrasena;
+            this.eleccion.smtp = data.smtp;
+            this.eleccion.puerto = data.puerto;
+            this.eleccion.correo_RP = data.correo_RP;
+            this.eleccion.contrasena_RP = data.contrasena_RP;
+            this.eleccion.puerto_RP = data.puerto_RP;
+            this.eleccion.smtp_RP = data.smtp_RP;
           }
         }
       } catch (error) {
@@ -261,6 +288,7 @@ export const useTipoEleccionesStore = defineStore("useTipoEleccionesStore", {
             this.requisistos.genero = data.genero;
             this.requisistos.activo = data.activo;
             this.requisistos.descripcion = data.descripcion;
+            this.requisistos.obligatorio = data.obligatorio;
           }
         }
       } catch (error) {

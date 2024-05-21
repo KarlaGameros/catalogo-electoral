@@ -38,22 +38,6 @@
             >
             </q-select>
           </div>
-          <div
-            v-if="coalicion.comun == true"
-            class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
-          >
-            <q-input
-              type="number"
-              v-model.number="porcentaje"
-              label="Porcentaje de participación"
-              hint="Ingrese porcentaje de participación"
-              lazy-rules
-              :rules="[
-                (val) => !!val || 'El porcentahe de participación es requerido',
-              ]"
-            >
-            </q-input>
-          </div>
         </q-card-section>
         <q-card-section class="q-pa-md">
           <div class="col-12 justify-end">

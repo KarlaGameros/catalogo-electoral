@@ -1,6 +1,5 @@
 <template>
   <q-table
-    :visible-columns="visible_columns"
     :rows="list_Integracion"
     :columns="columns"
     row-key="name"
@@ -54,16 +53,6 @@ import { useCoalicionesStore } from "../../../stores/coaliciones-store";
 const $q = useQuasar();
 const coalicionesStore = useCoalicionesStore();
 const { list_Integracion, coalicion } = storeToRefs(coalicionesStore);
-const visible_columns = ref([]);
-
-//-------------------------------------------------------------------
-
-watch(coalicion.value, (val) => {
-  if (val != null) {
-    visible_columns.value =
-      val.comun == true ? ["partido", "porcentaje", "id"] : ["partido", "id"];
-  }
-});
 
 //-------------------------------------------------------------------
 

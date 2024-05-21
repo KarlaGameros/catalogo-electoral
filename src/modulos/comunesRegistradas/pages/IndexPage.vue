@@ -5,7 +5,7 @@
         <div class="q-gutter-sm">
           <q-breadcrumbs>
             <q-breadcrumbs-el icon="home" to="/" />
-            <q-breadcrumbs-el icon="list_alt" label="Grupos indígenas" />
+            <q-breadcrumbs-el icon="list_alt" label="Comunes registradas" />
           </q-breadcrumbs>
         </div>
       </div>
@@ -14,7 +14,6 @@
       <div class="col">
         <div class="text-right q-pa-md items-start q-gutter-md">
           <q-btn
-            v-if="modulo == null ? false : modulo.registrar"
             type="button"
             color="pink-1"
             icon-right="add_circle_outline"
@@ -29,41 +28,24 @@
   </q-page>
 </template>
 <script setup>
-import { storeToRefs } from "pinia";
-import { onBeforeMount } from "vue";
 import { useQuasar } from "quasar";
-import { usePaisesPueblosStore } from "src/stores/paises-pueblos-store";
-import { useAuthStore } from "src/stores/auth-store";
-import TablaComp from "../component/TablaComp.vue";
-import ModalComp from "../component/ModalComp.vue";
+import { onBeforeMount } from "vue";
+import { useComunesRegistradasStore } from "src/stores/comunesRegistradas-store";
+import TablaComp from "../components/TablaComp.vue";
+import ModalComp from "../components/ModalComp.vue";
 
 //--------------------------------------------------------------------
 
 const $q = useQuasar();
-const paisesPueblosStore = usePaisesPueblosStore();
-const authStore = useAuthStore();
-const { modulo } = storeToRefs(authStore);
-const siglas = "SCE-CAT-GI";
+const comunesRegistradasStore = useComunesRegistradasStore();
 
 //--------------------------------------------------------------------
 
-onBeforeMount(() => {
-  leerPermisos();
-});
+onBeforeMount(() => {});
 
 //--------------------------------------------------------------------
-
-const leerPermisos = async () => {
-  $q.loading.show();
-  await authStore.loadModulo(siglas);
-  $q.loading.hide();
-};
 
 const actualizarModal = (valor) => {
-  $q.loading.show();
-  paisesPueblosStore.actualizarModalGrupo(valor);
-  $q.loading.hide();
+  comunesRegistradasStore.actualizarModal(valor);
 };
 </script>
-
-<style scope></style>

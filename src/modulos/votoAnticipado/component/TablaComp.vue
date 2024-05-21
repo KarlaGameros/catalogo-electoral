@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
-      :rows="list_Secciones"
+      :rows="list_Voto_Anticipado"
       :columns="columns"
       row-key="name"
       :filter="filter"
@@ -33,20 +33,18 @@
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar sección</q-tooltip>
-              </q-btn>
-              <q-btn
-                v-if="modulo == null ? false : modulo.eliminar"
-                flat
-                round
-                color="pink"
-                icon="delete"
-                @click="eliminar(col.value)"
-              >
-                <q-tooltip>Eliminar sección</q-tooltip>
+                <q-tooltip>Editar </q-tooltip>
               </q-btn>
             </div>
-
+            <div v-else-if="col.name === 'computado'">
+              <q-icon
+                size="sm"
+                flat
+                round
+                :color="col.value == true ? 'green' : 'red'"
+                :name="col.value == true ? 'done' : 'close'"
+              />
+            </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
         </q-tr>
@@ -59,26 +57,30 @@
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
 import { useAuthStore } from "src/stores/auth-store";
+import { useVotoAnticipado } from "src/stores/voto-anticipado";
 import { onBeforeMount, ref } from "vue";
-import { useSeccionesStore } from "../../../stores/secciones-store";
 
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
-const seccionesStore = useSeccionesStore();
 const authStore = useAuthStore();
-const { list_Secciones } = storeToRefs(seccionesStore);
+const votoanticipadoStore = useVotoAnticipado();
 const { modulo } = storeToRefs(authStore);
-const siglas = "SCE-CAT-SE";
+const { list_Voto_Anticipado } = storeToRefs(votoanticipadoStore);
+const siglas = "SCE-TIP-EL";
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
-  seccionesStore.loadSecciones();
+  cargarData();
   leerPermisos();
 });
 
 //-------------------------------------------------------------------
+
+const cargarData = async () => {
+  await votoanticipadoStore.loadVotoAnticipado();
+};
 
 const leerPermisos = async () => {
   $q.loading.show();
@@ -86,67 +88,19 @@ const leerPermisos = async () => {
   $q.loading.hide();
 };
 
-const editar = async (id) => {
-  $q.loading.show();
-  await seccionesStore.loadSeccion(id);
-  seccionesStore.updateEditar(true);
-  seccionesStore.actualizarModal(true);
-  $q.loading.hide();
-};
-
-const eliminar = async (id) => {
-  $q.dialog({
-    title: "Eliminar sección",
-    message: "¿Está seguro de eliminar la sección?",
-    icon: "Warning",
-    persistent: true,
-    transitionShow: "scale",
-    transitionHide: "scale",
-    ok: {
-      color: "positive",
-      label: "¡Sí!, eliminar",
-    },
-    cancel: {
-      color: "negative",
-      label: " No Cancelar",
-    },
-  }).onOk(async () => {
-    $q.loading.show();
-    const resp = await seccionesStore.deleteCasilla(id);
-    if (resp.success) {
-      $q.loading.hide();
-      $q.notify({
-        position: "top-right",
-        type: "positive",
-        message: resp.data,
-      });
-      seccionesStore.loadSecciones();
-    } else {
-      $q.loading.hide();
-      $q.notify({
-        position: "top-right",
-        type: "negative",
-        message: resp.data,
-      });
-    }
-  });
-};
-
-//-------------------------------------------------------------------
-
 const columns = [
   {
-    name: "nombre",
+    name: "usuario",
     align: "center",
-    label: "Sección",
-    field: "nombre",
+    label: "Usuario",
+    field: "usuario",
     sortable: true,
   },
   {
-    name: "tipo_Seccion",
+    name: "tipo_Eleccion",
     align: "center",
-    label: "Tipo sección",
-    field: "tipo_Seccion",
+    label: "Tipo de elección",
+    field: "tipo_Eleccion",
     sortable: true,
   },
   {
@@ -168,20 +122,6 @@ const columns = [
     align: "center",
     label: "Demarcación",
     field: "demarcacion",
-    sortable: true,
-  },
-  {
-    name: "cabecera_Localidad",
-    align: "center",
-    label: "Cabecera localidad",
-    field: "cabecera_Localidad",
-    sortable: true,
-  },
-  {
-    name: "padron_Electoral",
-    align: "center",
-    label: "Padrón electoral",
-    field: "padron_Electoral",
     sortable: true,
   },
   {
@@ -210,20 +150,12 @@ const pagination = ref({
 });
 
 //-------------------------------------------------------------------
+
+const editar = async (id) => {
+  $q.loading.show();
+  await votoanticipadoStore.loadVoto(id);
+  votoanticipadoStore.updateEditar(true);
+  votoanticipadoStore.actualizarModal(true);
+  $q.loading.hide();
+};
 </script>
-
-<style lang="sass">
-.my-sticky-last-column-table
-  thead tr:last-child th:last-child
-    /* bg color is important for th; just specify one */
-    background-color: white
-
-  td:last-child
-    background-color: white
-
-  th:last-child,
-  td:last-child
-    position: sticky
-    right: 0
-    z-index: 1
-</style>

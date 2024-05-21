@@ -1,13 +1,25 @@
 <template>
   <div class="q-pa-md">
     <q-table
-      :rows="list_Casillas"
+      :rows="list_Casillas_Filtrado"
       :columns="columns"
       row-key="name"
       :filter="filter"
       :pagination="pagination"
       class="my-sticky-last-column-table"
     >
+      <template v-slot:top-left>
+        <q-select
+          filled
+          color="pink"
+          class="q-pr-md"
+          v-model="municipio_Id"
+          :options="list_Municipios"
+          label="Selecciona municipio"
+          hint="Filtrar por municipio"
+          style="width: 260px"
+        />
+      </template>
       <template v-slot:top-right>
         <q-input
           borderless
@@ -33,7 +45,7 @@
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar demarcación</q-tooltip>
+                <q-tooltip>Editar casilla</q-tooltip>
               </q-btn>
               <q-btn
                 v-if="modulo == null ? false : modulo.eliminar"
@@ -43,7 +55,7 @@
                 icon="delete"
                 @click="eliminar(col.value)"
               >
-                <q-tooltip>Eliminar demarcación</q-tooltip>
+                <q-tooltip>Eliminar casilla</q-tooltip>
               </q-btn>
             </div>
             <div v-else-if="col.name === 'activo'">
@@ -64,31 +76,37 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount, ref, watchEffect } from "vue";
 import { useCasillasStore } from "../../../stores/casillas-store";
 import { useAuthStore } from "../../../stores/auth-store";
+import { useMunicipiosStore } from "src/stores/municipios-store";
 
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
-const casillasStore = useCasillasStore();
-const { list_Casillas } = storeToRefs(casillasStore);
 const authStore = useAuthStore();
+const casillasStore = useCasillasStore();
+const municipiosStore = useMunicipiosStore();
+const { list_Casillas } = storeToRefs(casillasStore);
+const { list_Municipios } = storeToRefs(municipiosStore);
 const { modulo } = storeToRefs(authStore);
 const siglas = "SCE-CAT-CA";
+const municipio_Id = ref(null);
+const list_Casillas_Filtrado = ref([]);
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
-  casillasStore.loadCasillas();
-  leerPermisos();
+  cargarData();
 });
 
 //-------------------------------------------------------------------
 
-const leerPermisos = async () => {
+const cargarData = async () => {
   $q.loading.show();
   await authStore.loadModulo(siglas);
+  await casillasStore.loadCasillas();
+  municipio_Id.value = { value: 0, label: "Todos" };
   $q.loading.hide();
 };
 
@@ -142,13 +160,6 @@ const eliminar = async (id) => {
 
 const columns = [
   {
-    name: "nombre",
-    align: "center",
-    label: "Nombre",
-    field: "nombre",
-    sortable: true,
-  },
-  {
     name: "municipio",
     align: "center",
     label: "Municipio",
@@ -177,9 +188,16 @@ const columns = [
     sortable: true,
   },
   {
+    name: "nombre",
+    align: "center",
+    label: "Nombre",
+    field: "nombre",
+    sortable: true,
+  },
+  {
     name: "extension_Contigua",
     align: "center",
-    label: "Extension contigua",
+    label: "Extraordinaria contigua",
     field: "extension_Contigua",
     sortable: true,
   },
@@ -293,6 +311,26 @@ const pagination = ref({
 });
 
 //-------------------------------------------------------------------
+
+const filtrar = (list_Casillas, filtro) => {
+  list_Casillas_Filtrado.value = list_Casillas.filter((item) => {
+    let cumple = true;
+    if (filtro.municipio !== undefined) {
+      if (filtro.municipio == 0) {
+        cumple = cumple && item.municipio_Id === item.municipio_Id;
+      } else {
+        cumple = cumple && item.municipio_Id === filtro.municipio;
+      }
+    }
+    return cumple;
+  });
+};
+
+watchEffect(() => {
+  const filtro = {};
+  if (municipio_Id.value != null) filtro.municipio = municipio_Id.value.value;
+  filtrar(list_Casillas.value, filtro);
+});
 </script>
 
 <style lang="sass">

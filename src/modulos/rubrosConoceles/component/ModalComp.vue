@@ -7,7 +7,7 @@
   >
     <q-card style="width: 800px; max-width: 80vw">
       <q-card-section class="row">
-        <div class="text-h6">Rurbos de evaluación</div>
+        <div class="text-h6">Rubros de evaluación</div>
         <q-space />
         <q-btn
           icon="close"
@@ -182,11 +182,6 @@ const agregarVariable = async () => {
     if (variable.value.id != null) {
       resp = await conocelesStore.updateVariable(variable.value);
     } else {
-      variable.value.variable = variableEvaluar.value;
-      variable.value.tipo = tipo.value;
-      variable.value.descripcion = descripcion.value;
-      variable.value.cumple = cumple.value;
-      variable.value.no_Cumple = no_Cumple.value;
       if (rubro.value.id != null) {
         resp = await conocelesStore.createVariable(
           rubro.value.id,

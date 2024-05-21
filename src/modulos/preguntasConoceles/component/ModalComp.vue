@@ -210,6 +210,7 @@ const onSubmit = async () => {
       pregunta.value
     );
   } else {
+    pregunta.value.numero = numero.value;
     resp = await conocelesStore.createPregunta(pregunta.value);
   }
   if (resp.success) {

@@ -40,6 +40,11 @@ const routes = [
         component: () => import("../modulos/casillas/pages/IndexPage"),
       },
       {
+        path: "/voto_anticipado",
+        name: "voto_anticipado",
+        component: () => import("../modulos/votoAnticipado/pages/IndexPage"),
+      },
+      {
         path: "/tipo_elecciones",
         name: "tipo_elecciones",
         component: () => import("../modulos/tipoElecciones/pages/IndexPage"),
@@ -69,6 +74,12 @@ const routes = [
         path: "/gruposIndigenas",
         name: "gruposIndigenas",
         component: () => import("../modulos/gruposIndigenas/pages/IndexPage"),
+      },
+      {
+        path: "/comunesRegistradas",
+        name: "comunesRegistradas",
+        component: () =>
+          import("../modulos/comunesRegistradas/pages/IndexPage"),
       },
     ],
   },

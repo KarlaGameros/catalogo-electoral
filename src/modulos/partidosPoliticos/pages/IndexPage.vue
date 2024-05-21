@@ -26,6 +26,7 @@
     </div>
     <TablaComp />
     <ModalComp />
+    <ModalIntegracionComun />
   </q-page>
 </template>
 <script setup>
@@ -36,6 +37,7 @@ import { onBeforeMount } from "vue";
 import { usePartidosPoliticosStore } from "src/stores/partidos-politicos-store";
 import ModalComp from "../component/ModalComp.vue";
 import TablaComp from "../component/TablaComp.vue";
+import ModalIntegracionComun from "../component/ModalIntegracionComun.vue";
 
 //--------------------------------------------------------------------
 

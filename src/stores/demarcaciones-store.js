@@ -55,6 +55,32 @@ export const useDemarcacionesStore = defineStore("useDemarcacionesStore", {
     },
 
     //----------------------------------------------------------------------
+    //DEMARCACIONES BY MUNICIPIO
+    async loadDemarcacionesByMunicipio(id) {
+      try {
+        let resp = await api.get(`/Demarcaciones/ByMunicipio/${id}`);
+        let { data } = resp.data;
+        this.list_Demarcaciones = data.map((demarcacion) => {
+          return {
+            id: demarcacion.id,
+            municipio_Id: demarcacion.no_Distrito,
+            municipio: demarcacion.municipio,
+            nombre: demarcacion.nombre,
+            no_Demarcacion: demarcacion.no_Demarcacion,
+            indigena: demarcacion.indigena,
+            label: demarcacion.nombre,
+            value: demarcacion.id,
+          };
+        });
+      } catch (error) {
+        return {
+          success: false,
+          data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+        };
+      }
+    },
+
+    //----------------------------------------------------------------------
     //GET DEMARCACION
     async loadDemarcacion(id) {
       try {

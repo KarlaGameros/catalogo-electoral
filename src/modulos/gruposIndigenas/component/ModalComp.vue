@@ -8,7 +8,7 @@
     <q-card style="width: 800px; max-width: 80vw">
       <q-card-section class="row">
         <div class="text-h6">
-          {{ !isEditar ? "Registrar grupo indigena" : "Editar grupo indigena" }}
+          {{ !isEditar ? "Registrar grupo indígena" : "Editar grupo indígena" }}
         </div>
         <q-space />
         <q-btn

@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-md">
     <q-table
-      :rows="list_Secciones"
+      :rows="list_Comunes_Registradas"
       :columns="columns"
       row-key="name"
       :filter="filter"
@@ -26,27 +26,31 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <div v-if="col.name === 'id'">
               <q-btn
-                v-if="modulo == null ? false : modulo.actualizar"
                 flat
                 round
                 color="pink"
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar sección</q-tooltip>
+                <q-tooltip>Editar</q-tooltip>
               </q-btn>
               <q-btn
-                v-if="modulo == null ? false : modulo.eliminar"
                 flat
                 round
                 color="pink"
                 icon="delete"
                 @click="eliminar(col.value)"
               >
-                <q-tooltip>Eliminar sección</q-tooltip>
+                <q-tooltip>Eliminar</q-tooltip>
               </q-btn>
             </div>
-
+            <div v-else-if="col.name === 'voto_Valido_Comun_RP'">
+              <q-icon
+                size="sm"
+                :color="col.value == true ? 'green' : 'red'"
+                :name="col.value == true ? 'done' : 'close'"
+              />
+            </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
         </q-tr>
@@ -58,95 +62,35 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import { useQuasar } from "quasar";
-import { useAuthStore } from "src/stores/auth-store";
 import { onBeforeMount, ref } from "vue";
-import { useSeccionesStore } from "../../../stores/secciones-store";
+import { useComunesRegistradasStore } from "../../../stores/comunesRegistradas-store";
 
 //-------------------------------------------------------------------
 
 const $q = useQuasar();
-const seccionesStore = useSeccionesStore();
-const authStore = useAuthStore();
-const { list_Secciones } = storeToRefs(seccionesStore);
-const { modulo } = storeToRefs(authStore);
-const siglas = "SCE-CAT-SE";
+const comunesRegistradasStore = useComunesRegistradasStore();
+const { list_Comunes_Registradas } = storeToRefs(comunesRegistradasStore);
 
 //-------------------------------------------------------------------
 
 onBeforeMount(() => {
-  seccionesStore.loadSecciones();
-  leerPermisos();
+  cargarData();
 });
 
 //-------------------------------------------------------------------
 
-const leerPermisos = async () => {
+const cargarData = async () => {
   $q.loading.show();
-  await authStore.loadModulo(siglas);
+  await comunesRegistradasStore.loadComunesRegistradas();
   $q.loading.hide();
 };
-
-const editar = async (id) => {
-  $q.loading.show();
-  await seccionesStore.loadSeccion(id);
-  seccionesStore.updateEditar(true);
-  seccionesStore.actualizarModal(true);
-  $q.loading.hide();
-};
-
-const eliminar = async (id) => {
-  $q.dialog({
-    title: "Eliminar sección",
-    message: "¿Está seguro de eliminar la sección?",
-    icon: "Warning",
-    persistent: true,
-    transitionShow: "scale",
-    transitionHide: "scale",
-    ok: {
-      color: "positive",
-      label: "¡Sí!, eliminar",
-    },
-    cancel: {
-      color: "negative",
-      label: " No Cancelar",
-    },
-  }).onOk(async () => {
-    $q.loading.show();
-    const resp = await seccionesStore.deleteCasilla(id);
-    if (resp.success) {
-      $q.loading.hide();
-      $q.notify({
-        position: "top-right",
-        type: "positive",
-        message: resp.data,
-      });
-      seccionesStore.loadSecciones();
-    } else {
-      $q.loading.hide();
-      $q.notify({
-        position: "top-right",
-        type: "negative",
-        message: resp.data,
-      });
-    }
-  });
-};
-
-//-------------------------------------------------------------------
 
 const columns = [
   {
-    name: "nombre",
+    name: "eleccion",
     align: "center",
-    label: "Sección",
-    field: "nombre",
-    sortable: true,
-  },
-  {
-    name: "tipo_Seccion",
-    align: "center",
-    label: "Tipo sección",
-    field: "tipo_Seccion",
+    label: "Tipo de elección",
+    field: "eleccion",
     sortable: true,
   },
   {
@@ -171,24 +115,10 @@ const columns = [
     sortable: true,
   },
   {
-    name: "cabecera_Localidad",
+    name: "voto_Valido_Comun_RP",
     align: "center",
-    label: "Cabecera localidad",
-    field: "cabecera_Localidad",
-    sortable: true,
-  },
-  {
-    name: "padron_Electoral",
-    align: "center",
-    label: "Padrón electoral",
-    field: "padron_Electoral",
-    sortable: true,
-  },
-  {
-    name: "listado_Nominal",
-    align: "center",
-    label: "Listado nominal",
-    field: "listado_Nominal",
+    label: "Voto valido RP",
+    field: "voto_Valido_Comun_RP",
     sortable: true,
   },
   {
@@ -210,6 +140,52 @@ const pagination = ref({
 });
 
 //-------------------------------------------------------------------
+
+const editar = async (id) => {
+  $q.loading.show();
+  await comunesRegistradasStore.loadComunRegistrada(id);
+  comunesRegistradasStore.updateEditar(true);
+  comunesRegistradasStore.actualizarModal(true);
+  $q.loading.hide();
+};
+
+const eliminar = async (id) => {
+  $q.dialog({
+    title: "Eliminar",
+    message: "¿Está seguro de eliminar?",
+    icon: "Warning",
+    persistent: true,
+    transitionShow: "scale",
+    transitionHide: "scale",
+    ok: {
+      color: "positive",
+      label: "¡Sí!, eliminar",
+    },
+    cancel: {
+      color: "red",
+      label: " No Cancelar",
+    },
+  }).onOk(async () => {
+    $q.loading.show();
+    const resp = await comunesRegistradasStore.deleteComunRP(id);
+    if (resp.success) {
+      $q.loading.hide();
+      $q.notify({
+        position: "top-right",
+        type: "positive",
+        message: resp.data,
+      });
+      await comunesRegistradasStore.loadComunesRegistradas();
+    } else {
+      $q.loading.hide();
+      $q.notify({
+        position: "top-right",
+        type: "negative",
+        message: resp.data,
+      });
+    }
+  });
+};
 </script>
 
 <style lang="sass">

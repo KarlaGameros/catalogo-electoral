@@ -17,6 +17,14 @@
             v-if="modulo == null ? false : modulo.registrar"
             type="button"
             color="pink-1"
+            icon-right="image"
+            label="Agregar logo combinaciones"
+            @click="logoCombinaciones(true)"
+          />
+          <q-btn
+            v-if="modulo == null ? false : modulo.registrar"
+            type="button"
+            color="pink-1"
             icon-right="add_circle_outline"
             label="Nuevo"
             @click="actualizarModal(true)"
@@ -28,6 +36,7 @@
     <ModalComp />
     <ModalIntegracionComp />
     <ModalCombinaciones />
+    <ModalLogoCombinaciones />
   </q-page>
 </template>
 <script setup>
@@ -40,6 +49,7 @@ import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
 import ModalIntegracionComp from "../component/ModalIntegracionComp.vue";
 import ModalCombinaciones from "../component/ModalCombinaciones.vue";
+import ModalLogoCombinaciones from "../component/ModalLogoCombinacioneMasivo.vue";
 
 //--------------------------------------------------------------------
 
@@ -64,10 +74,10 @@ const leerPermisos = async () => {
 };
 
 const actualizarModal = (valor) => {
-  $q.loading.show();
   coalicionStore.actualizarModal(valor);
-  $q.loading.hide();
+};
+
+const logoCombinaciones = (valor) => {
+  coalicionStore.actualizarModalLogoMasivo(valor);
 };
 </script>
-
-<style scope></style>

@@ -5,7 +5,7 @@
         <div class="q-gutter-sm">
           <q-breadcrumbs>
             <q-breadcrumbs-el icon="home" to="/" />
-            <q-breadcrumbs-el icon="list_alt" label="Grupos indígenas" />
+            <q-breadcrumbs-el icon="list_alt" label="Voto anticipado" />
           </q-breadcrumbs>
         </div>
       </div>
@@ -14,7 +14,6 @@
       <div class="col">
         <div class="text-right q-pa-md items-start q-gutter-md">
           <q-btn
-            v-if="modulo == null ? false : modulo.registrar"
             type="button"
             color="pink-1"
             icon-right="add_circle_outline"
@@ -29,21 +28,21 @@
   </q-page>
 </template>
 <script setup>
+import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
 import { onBeforeMount } from "vue";
-import { useQuasar } from "quasar";
-import { usePaisesPueblosStore } from "src/stores/paises-pueblos-store";
 import { useAuthStore } from "src/stores/auth-store";
+import { useVotoAnticipado } from "src/stores/voto-anticipado";
 import TablaComp from "../component/TablaComp.vue";
 import ModalComp from "../component/ModalComp.vue";
 
 //--------------------------------------------------------------------
 
 const $q = useQuasar();
-const paisesPueblosStore = usePaisesPueblosStore();
+const votoanticipadoStore = useVotoAnticipado();
 const authStore = useAuthStore();
 const { modulo } = storeToRefs(authStore);
-const siglas = "SCE-CAT-GI";
+const siglas = "SCE-CAT-DI";
 
 //--------------------------------------------------------------------
 
@@ -61,9 +60,7 @@ const leerPermisos = async () => {
 
 const actualizarModal = (valor) => {
   $q.loading.show();
-  paisesPueblosStore.actualizarModalGrupo(valor);
+  votoanticipadoStore.actualizarModal(valor);
   $q.loading.hide();
 };
 </script>
-
-<style scope></style>

@@ -5,7 +5,7 @@
         <div class="q-gutter-sm">
           <q-breadcrumbs>
             <q-breadcrumbs-el icon="home" to="/" />
-            <q-breadcrumbs-el icon="list_alt" label="Rubros" />
+            <q-breadcrumbs-el icon="list_alt" label="Rubros a evaluar" />
           </q-breadcrumbs>
         </div>
       </div>

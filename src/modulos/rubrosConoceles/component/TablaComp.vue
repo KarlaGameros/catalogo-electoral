@@ -33,7 +33,7 @@
                 icon="edit"
                 @click="editar(col.value)"
               >
-                <q-tooltip>Editar partido político</q-tooltip>
+                <q-tooltip>Editar rubro</q-tooltip>
               </q-btn>
               <q-btn
                 v-if="modulo == null ? false : modulo.eliminar"
@@ -43,7 +43,7 @@
                 icon="delete"
                 @click="eliminar(col.value)"
               >
-                <q-tooltip>Eliminar partido político</q-tooltip>
+                <q-tooltip>Eliminar rubro</q-tooltip>
               </q-btn>
             </div>
 

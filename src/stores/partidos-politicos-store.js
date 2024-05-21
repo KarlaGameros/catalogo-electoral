@@ -6,8 +6,10 @@ export const usePartidosPoliticosStore = defineStore(
   {
     state: () => ({
       modal: false,
+      modalIntegracion: false,
       isEditar: false,
       list_Partidos_Politicos: [],
+      list_Partidos_Comun: [],
       partido: {
         id: null,
         nombre: null,
@@ -15,8 +17,19 @@ export const usePartidosPoliticosStore = defineStore(
         logo_URL: null,
         independiente: false,
         prioridad: null,
+        is_Comun: false,
         pantone_Letra: null,
         pantone_Fondo: null,
+        is_Coalicion: false,
+        coalicion_Id: null,
+        coalicion: null,
+        orden_Publicacion: null,
+      },
+      comun: {
+        partido_Padre_Id: null,
+        partido_Id: null,
+        porcentaje: null,
+        activo: true,
       },
     }),
     actions: {
@@ -31,13 +44,44 @@ export const usePartidosPoliticosStore = defineStore(
         this.partido.prioridad = null;
         this.partido.pantone_Fondo = null;
         this.partido.pantone_Letra = null;
+        this.partido.is_Coalicion = false;
+        this.partido.coalicion_Id = null;
+        this.partido.coalicion = null;
+        this.partido.is_Comun = false;
+        this.partido.orden_Publicacion = null;
+      },
+
+      //----------------------------------------------------------------------
+      //GEL INTEGRACION COMUN
+      async loadComun(partido_Padre_Id) {
+        try {
+          let resp = await api.get(
+            `/Partidos_Politicos/IsComunIntegracion/${partido_Padre_Id}`
+          );
+          let { data } = resp.data;
+          this.list_Partidos_Comun = data.map((partido) => {
+            return {
+              id: partido.id,
+              partido_Padre_Id: partido.partido_Padre_Id,
+              partido_Id: partido.partido_Id,
+              partido: partido.partido,
+              porcentaje: partido.porcentaje,
+              activo: partido.activo,
+            };
+          });
+        } catch (error) {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
       },
 
       //----------------------------------------------------------------------
       //GEL ALL
       async loadPartidosPoliticos() {
         try {
-          let resp = await api.get("/Partidos_Politicos");
+          let resp = await api.get("/Partidos_Politicos/PartidosRP");
           let { data } = resp.data;
           let listPartidosPoliticos = data.map((partido) => {
             return {
@@ -51,9 +95,14 @@ export const usePartidosPoliticosStore = defineStore(
               prioridad: partido.prioridad,
               pantone_Fondo: partido.pantone_Fondo,
               pantone_Letra: partido.pantona_Letra,
+              is_Comun: partido.is_Comun,
+              orden_Publicacion: partido.orden_Publicacion,
+              comun_Padre: partido.comun_Padre,
             };
           });
-          this.list_Partidos_Politicos = listPartidosPoliticos;
+          this.list_Partidos_Politicos = listPartidosPoliticos.sort(
+            (a, b) => a.prioridad - b.prioridad
+          );
         } catch (error) {
           return {
             success: false,
@@ -79,6 +128,8 @@ export const usePartidosPoliticosStore = defineStore(
               this.partido.prioridad = data.prioridad;
               this.partido.pantone_Letra = data.pantona_Letra;
               this.partido.pantone_Fondo = data.pantone_Fondo;
+              this.partido.is_Comun = data.is_Comun;
+              this.partido.orden_Publicacion = data.orden_Publicacion;
             }
           }
         } catch (error) {
@@ -98,6 +149,35 @@ export const usePartidosPoliticosStore = defineStore(
               "Conten-Type": "multipart/form-data",
             },
           });
+          if (resp.status == 200) {
+            const { success, data } = resp.data;
+            if (success === true) {
+              return { success, data };
+            } else {
+              return { success, data };
+            }
+          } else {
+            return {
+              success: false,
+              data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+            };
+          }
+        } catch (error) {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      },
+
+      //----------------------------------------------------------------------
+      //CREATE COMUN
+      async createIntegracionComun(partido_Padre_Id, comun) {
+        try {
+          const resp = await api.post(
+            `/Candidatura_Comun/${partido_Padre_Id}`,
+            comun
+          );
           if (resp.status == 200) {
             const { success, data } = resp.data;
             if (success === true) {
@@ -170,9 +250,39 @@ export const usePartidosPoliticosStore = defineStore(
           };
         }
       },
+
+      //----------------------------------------------------------------------
+      //DELETE PARTIDO COMUN
+      async deletePartidoComun(id) {
+        try {
+          const resp = await api.delete(`/Candidatura_Comun/${id}`);
+          if (resp.status == 200) {
+            let { success, data } = resp.data;
+            if (success === true) {
+              return { success, data };
+            } else {
+              return { success, data };
+            }
+          } else {
+            return {
+              success: false,
+              data: "Ocurrio un error, intentelo de nuevo",
+            };
+          }
+        } catch (error) {
+          return {
+            success: false,
+            data: "Ocurrió un error, inténtelo de nuevo. Si el error persiste, contacte a soporte",
+          };
+        }
+      },
       //----------------------------------------------------------------------
       actualizarModal(valor) {
         this.modal = valor;
+      },
+
+      actualizarModalIntegracion(valor) {
+        this.modalIntegracion = valor;
       },
 
       updateEditar(valor) {

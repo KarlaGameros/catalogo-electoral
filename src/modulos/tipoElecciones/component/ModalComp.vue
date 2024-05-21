@@ -25,7 +25,7 @@
 
       <q-card-section>
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
-          <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
             <q-input
               v-model.trim="eleccion.nombre"
               label="Nombre del tipo de elección"
@@ -46,7 +46,7 @@
             >
             </q-input>
           </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center">
             <q-checkbox
               color="pink"
               right-label
@@ -55,6 +55,78 @@
               checked-icon="task_alt"
               unchecked-icon="highlight_off"
             />
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.correo"
+              label="Correo MR"
+              hint="Ingrese correo MR"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.contrasena"
+              label="Contraseña MR"
+              hint="Ingrese contraseña MR"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.smtp"
+              label="Smpt MR"
+              hint="Ingrese smpt MR"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.puerto"
+              label="Puerto MR"
+              hint="Ingrese puerto MR"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.correo_RP"
+              label="Correo RP"
+              hint="Ingrese correo RP"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.contrasena_RP"
+              label="Contraseña RP"
+              hint="Ingrese contraseña RP"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.smtp_RP"
+              label="Smpt RP"
+              hint="Ingrese smpt RP"
+              autogrow
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <q-input
+              v-model.trim="eleccion.puerto_RP"
+              label="Puerto RP"
+              hint="Ingrese puerto RP"
+              autogrow
+            >
+            </q-input>
           </div>
           <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
             <q-checkbox
