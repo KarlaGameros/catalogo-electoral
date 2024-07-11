@@ -60,7 +60,9 @@
             </q-select>
           </div>
           <div
-            v-if="eleccion_Id != null && eleccion_Id.siglas != 'DIP'"
+            v-if="
+              eleccion_Id != null && eleccion_Id.siglas != 'DIP' && rp == false
+            "
             class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
           >
             <q-select
@@ -81,6 +83,16 @@
               left-label
               v-model="voto_Valido"
               label="Voto valido común RP"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
+            />
+            <q-checkbox
+              size="lg"
+              class="text-bold"
+              color="pink"
+              left-label
+              v-model="rp"
+              label="RP"
               checked-icon="task_alt"
               unchecked-icon="highlight_off"
             />
@@ -139,6 +151,7 @@ const distrito_Id = ref(null);
 const municipio_Id = ref(null);
 const demarcacion_Id = ref(null);
 const voto_Valido = ref(false);
+const rp = ref(false);
 
 //-----------------------------------------------------------
 
@@ -158,6 +171,13 @@ watch(comunRegistrada.value, (val) => {
       cargarDistrito(val);
     }
     voto_Valido.value = val.voto_Valido_Comun_RP;
+    rp.value = val.rp;
+  }
+});
+
+watch(rp, (val) => {
+  if (val == true) {
+    demarcacion_Id.value = null;
   }
 });
 
@@ -224,6 +244,7 @@ const actualizarModal = (valor) => {
   municipio_Id.value = null;
   demarcacion_Id.value = null;
   voto_Valido.value = false;
+  rp.value = false;
 };
 
 const onSubmit = async () => {
@@ -250,15 +271,22 @@ const onSubmit = async () => {
     $q.loading.show();
     if (distrito_Id.value != null) {
       comunRegistrada.value.distrito_Id = distrito_Id.value.value;
+    } else {
+      comunRegistrada.value.distrito_Id = null;
     }
     if (municipio_Id.value != null) {
       comunRegistrada.value.municipio_Id = municipio_Id.value.value;
+    } else {
+      comunRegistrada.value.municipio_Id = null;
     }
     if (demarcacion_Id.value != null) {
       comunRegistrada.value.demarcacion_Id = demarcacion_Id.value.value;
+    } else {
+      comunRegistrada.value.demarcacion_Id = null;
     }
     comunRegistrada.value.tipo_Eleccion_Id = eleccion_Id.value.value;
     comunRegistrada.value.voto_Valido_Comun_RP = voto_Valido.value;
+    comunRegistrada.value.rp = rp.value;
     if (isEditar.value == true) {
       resp = await comunesRegistradasStore.updateComunRegistrada(
         comunRegistrada.value

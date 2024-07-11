@@ -8,9 +8,7 @@
     <q-card style="width: 800px; max-width: 80vw">
       <q-card-section class="row">
         <div class="text-h6">
-          {{
-            !isEditar ? "Registrar voto anticipado" : "Editar voto anticipado"
-          }}
+          {{ !isEditar ? "Registrar modelo de acta" : "Editar modelo de acta" }}
         </div>
         <q-space />
         <q-btn
@@ -24,7 +22,7 @@
       </q-card-section>
       <q-card-section>
         <q-form class="row q-col-gutter-xs" @submit="onSubmit">
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 q-pa-xs">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-select
               label="Tipo de elección"
               v-model="eleccion_Id"
@@ -35,8 +33,8 @@
             />
           </div>
           <div
-            v-if="eleccion_Siglas == 'DIP'"
-            class="col-lg-6 col-md-6 col-sm-6 col-xs-12 q-pa-xs"
+            v-if="eleccion_Id != null && eleccion_Id.siglas == 'DIP'"
+            class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
           >
             <q-select
               label="Distrito"
@@ -47,7 +45,10 @@
               :rules="[(val) => !!val || 'El distrito es requerido']"
             />
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 q-pa-xs">
+          <div
+            v-if="eleccion_Id != null && eleccion_Id.siglas != 'DIP'"
+            class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
+          >
             <q-select
               label="Municipio"
               v-model="municipio_Id"
@@ -58,8 +59,8 @@
             />
           </div>
           <div
-            v-if="eleccion_Siglas == 'REG'"
-            class="col-lg-6 col-md-6 col-sm-6 col-xs-12 q-pa-xs"
+            v-if="eleccion_Id != null && eleccion_Id.siglas == 'REG'"
+            class="col-lg-6 col-md-6 col-sm-6 col-xs-12"
           >
             <q-select
               label="Demarcación"
@@ -70,15 +71,29 @@
               :rules="[(val) => !!val || 'La demarcación es requerida']"
             />
           </div>
-          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 q-pa-xs">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <q-input
-              v-model="voto_Anticipado.listado_Nominal"
-              label="Listado nominal"
+              v-model="modelo.ruta"
+              label="Ruta"
+              hint="Ruta"
               lazy-rules
-              :rules="[(val) => !!val || 'El listado nominal es requerido']"
+              :rules="[(val) => !!val || 'La ruta es requerida']"
+            >
+            </q-input>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+            <q-checkbox
+              size="lg"
+              class="text-bold"
+              color="pink"
+              left-label
+              v-model="modelo.estatal"
+              label="Estatal"
+              checked-icon="task_alt"
+              unchecked-icon="highlight_off"
             />
           </div>
-          <div class="col-12 justify-end q-pt-lg">
+          <div class="col-12 justify-end">
             <div class="text-right q-gutter-xs">
               <q-btn
                 label="Cancelar"
@@ -103,8 +118,8 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { storeToRefs } from "pinia";
+import { useModelosStore } from "src/stores/modelos-store";
 import { onBeforeMount, ref, watch } from "vue";
-import { useVotoAnticipado } from "src/stores/voto-anticipado";
 import { useTipoEleccionesStore } from "src/stores/tipo-elecciones";
 import { useDistritosStore } from "src/stores/distritos-store";
 import { useMunicipiosStore } from "src/stores/municipios-store";
@@ -113,21 +128,20 @@ import { useDemarcacionesStore } from "src/stores/demarcaciones-store";
 //-----------------------------------------------------------
 
 const $q = useQuasar();
-const votoanticipadoStore = useVotoAnticipado();
+const municipiosStore = useMunicipiosStore();
+const modelosStore = useModelosStore();
 const eleccionesStore = useTipoEleccionesStore();
 const distritosStore = useDistritosStore();
-const municipioStore = useMunicipiosStore();
 const demarcacionesStore = useDemarcacionesStore();
-const { modal, isEditar, voto_Anticipado } = storeToRefs(votoanticipadoStore);
+const { modal, isEditar, modelo } = storeToRefs(modelosStore);
+const { list_Demarcaciones } = storeToRefs(demarcacionesStore);
 const { list_Tipos_Elecciones } = storeToRefs(eleccionesStore);
 const { list_Distritos } = storeToRefs(distritosStore);
-const { list_Municipios } = storeToRefs(municipioStore);
-const { list_Demarcaciones } = storeToRefs(demarcacionesStore);
-const eleccion_Id = ref(null);
-const distrito_Id = ref(null);
+const { list_Municipios } = storeToRefs(municipiosStore);
 const municipio_Id = ref(null);
+const distrito_Id = ref(null);
 const demarcacion_Id = ref(null);
-const eleccion_Siglas = ref(null);
+const eleccion_Id = ref(null);
 
 //-----------------------------------------------------------
 
@@ -135,104 +149,81 @@ onBeforeMount(() => {
   cargarData();
 });
 
-watch(eleccion_Id, (val) => {
+watch(modelo.value, (val) => {
   if (val != null) {
-    eleccion_Siglas.value = val.siglas;
-  }
-});
-
-watch(voto_Anticipado.value, (val) => {
-  if (val.id != null) {
     cargarEleccion(val);
     cargarDistrito(val);
-    cargarMunicipio(val);
   }
 });
 
-watch(municipio_Id, async (val) => {
+watch(municipio_Id, (val) => {
   if (val != null) {
-    await demarcacionesStore.loadDemarcacionesByMunicipio(val.value);
+    demarcacionesStore.loadDemarcacionesByMunicipio(val.value);
   }
 });
-
-const cargarData = async () => {
-  await eleccionesStore.loadTiposEleeciones();
-  await distritosStore.loadDistritos();
-  await municipioStore.loadMunicipios();
-};
 
 const cargarEleccion = async (val) => {
   if (eleccion_Id.value == null) {
     let eleccionFiltrado = list_Tipos_Elecciones.value.find(
-      (x) => x.value == `${val.tipo_Eleccion_Id}`
+      (x) => x.value == val.tipo_Eleccion_Id
     );
     eleccion_Id.value = eleccionFiltrado;
-    eleccion_Siglas.value = eleccionFiltrado.siglas;
-  }
-};
-const cargarDistrito = async (val) => {
-  if (eleccion_Siglas.value == "DIP") {
-    if (distrito_Id.value == null) {
-      let distritoFiltrado = list_Distritos.value.find(
-        (x) => x.value == `${val.distrito_Id}`
-      );
-      distrito_Id.value = distritoFiltrado;
-    }
-  }
-};
-const cargarMunicipio = async (val) => {
-  if (municipio_Id.value == null) {
-    let municipioFiltrado = list_Municipios.value.find(
-      (x) => x.value == `${val.municipio_Id}`
-    );
-    municipio_Id.value = municipioFiltrado;
-  }
-  if (eleccion_Siglas.value == "REG") {
-    await demarcacionesStore.loadDemarcacionesByMunicipio(val.municipio_Id);
-    if (demarcacion_Id.value == null) {
-      let demarcacionFiltrado = list_Demarcaciones.value.find(
-        (x) => x.value == `${val.demarcacion_Id}`
-      );
-      demarcacion_Id.value = demarcacionFiltrado;
-    }
   }
 };
 
-const actualizarModal = (valor) => {
-  eleccion_Siglas.value = null;
-  distrito_Id.value = null;
+const cargarDistrito = async (val) => {
+  if (distrito_Id.value == null) {
+    let eleccionFiltrado = list_Distritos.value.find(
+      (x) => x.value == val.distrito_Id
+    );
+    distrito_Id.value = eleccionFiltrado;
+  }
+};
+
+const cargarData = async () => {
+  await eleccionesStore.loadTiposEleeciones();
+  await distritosStore.loadDistritos();
+  await municipiosStore.loadMunicipios();
+};
+
+const limpiar = () => {
   municipio_Id.value = null;
+  distrito_Id.value = null;
   demarcacion_Id.value = null;
   eleccion_Id.value = null;
-  votoanticipadoStore.actualizarModal(valor);
-  votoanticipadoStore.updateEditar(valor);
-  votoanticipadoStore.initVotoAnticipado();
+};
+
+const actualizarModal = (valor) => {
+  limpiar();
+  modelosStore.actualizarModal(valor);
+  modelosStore.updateEditar(valor);
+  modelosStore.initModelo();
 };
 
 const onSubmit = async () => {
   let resp = null;
-  if (eleccion_Siglas.value == "DIP") {
-    voto_Anticipado.value.distrito_Id = distrito_Id.value.value;
-    voto_Anticipado.value.demarcacion_Id = null;
-  } else if (eleccion_Siglas.value == "PYS") {
-    voto_Anticipado.value.distrito_Id = null;
-    voto_Anticipado.value.demarcacion_Id = null;
-  } else {
-    voto_Anticipado.value.distrito_Id = null;
+  modelo.value.tipo_Eleccion_Id = eleccion_Id.value.value;
 
-    voto_Anticipado.value.demarcacion_Id = demarcacion_Id.value.value;
+  if (eleccion_Id.value != null && eleccion_Id.value.siglas == "REG") {
+    modelo.value.municipio_Id = municipio_Id.value.value;
+    modelo.value.demarcacion_Id = demarcacion_Id.value.value;
+    modelo.value.distrito_Id = null;
   }
-  voto_Anticipado.value.tipo_Eleccion_Id = eleccion_Id.value.value;
-  voto_Anticipado.value.municipio_Id = municipio_Id.value.value;
+  if (eleccion_Id.value != null && eleccion_Id.value.siglas == "PYS") {
+    modelo.value.municipio_Id = municipio_Id.value.value;
+    modelo.value.distrito_Id = null;
+    modelo.value.demarcacion_Id = null;
+  }
+  if (eleccion_Id.value != null && eleccion_Id.value.siglas == "DIP") {
+    modelo.value.distrito_Id = distrito_Id.value.value;
+    modelo.value.demarcacion_Id = null;
+    modelo.value.municipio_Id = null;
+  }
   $q.loading.show();
   if (isEditar.value == true) {
-    resp = await votoanticipadoStore.updateVotoAnticipado(
-      voto_Anticipado.value
-    );
+    resp = await modelosStore.updateModelo(modelo.value);
   } else {
-    resp = await votoanticipadoStore.createVotoAnticipado(
-      voto_Anticipado.value
-    );
+    resp = await modelosStore.createModelo(modelo.value);
   }
   if (resp.success) {
     $q.notify({
@@ -240,7 +231,8 @@ const onSubmit = async () => {
       type: "positive",
       message: resp.data,
     });
-    await votoanticipadoStore.loadVotoAnticipado();
+    await modelosStore.loadModelos(eleccion_Id.value.value);
+    modelosStore.initModelo();
     actualizarModal(false);
   } else {
     $q.notify({

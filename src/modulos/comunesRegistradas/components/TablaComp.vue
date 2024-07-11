@@ -51,6 +51,13 @@
                 :name="col.value == true ? 'done' : 'close'"
               />
             </div>
+            <div v-else-if="col.name === 'rp'">
+              <q-icon
+                size="sm"
+                :color="col.value == true ? 'green' : 'red'"
+                :name="col.value == true ? 'done' : 'close'"
+              />
+            </div>
             <label v-else>{{ col.value }}</label>
           </q-td>
         </q-tr>
@@ -119,6 +126,13 @@ const columns = [
     align: "center",
     label: "Voto valido RP",
     field: "voto_Valido_Comun_RP",
+    sortable: true,
+  },
+  {
+    name: "rp",
+    align: "center",
+    label: "RP",
+    field: "rp",
     sortable: true,
   },
   {

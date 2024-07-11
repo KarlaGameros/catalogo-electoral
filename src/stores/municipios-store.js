@@ -54,7 +54,7 @@ export const useMunicipiosStore = defineStore("useMunicipiosStore", {
             nombre: municipio.nombre,
             fecha_Registro: municipio.fecha_Registro,
             value: municipio.id,
-            label: municipio.nombre,
+            label: `${municipio.clave}-${municipio.nombre}`,
           };
         });
         this.list_Municipios = listMunicipios;

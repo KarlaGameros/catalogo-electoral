@@ -10,21 +10,22 @@ import axios from "axios";
 // for each client)
 const encryptStorage = new EncryptStorage("SECRET_KEY", "sessionStorage");
 //------ELETORAL------
-const api = axios.create({
-  //baseURL: "http://sistema.ieenayarit.org:9370/api",
-  baseURL: "https://a050-44-220-242-27.ngrok-free.app/api",
-});
-const apiConoceles = axios.create({
-  baseURL: "http://sistema.ieenayarit.org:9378/api",
-});
-
-//------PRODUCCION------
 // const api = axios.create({
-//   baseURL: "http://sistema.ieenayarit.org:9470/api",
+//   //baseURL: "http://sistema.ieenayarit.org:9370/api",
+//   //baseURL: "https://4bf2-44-220-242-27.ngrok-free.app/api",
+//   baseURL: "https://7lw7jqm4-5472.use.devtunnels.ms/api",
 // });
 // const apiConoceles = axios.create({
-//   baseURL: "http://sistema.ieenayarit.org:9478/api",
+//   baseURL: "http://sistema.ieenayarit.org:9378/api",
 // });
+
+//------PRODUCCION------
+const api = axios.create({
+  baseURL: "http://sistema.ieenayarit.org:9483/api",
+});
+const apiConoceles = axios.create({
+  baseURL: "http://sistema.ieenayarit.org:9478/api",
+});
 
 //------SIMULACROS-----
 // const api = axios.create({
@@ -44,8 +45,8 @@ const apiConoceles = axios.create({
 
 //-----SIMULACRO PRODUCCION----
 // const api = axios.create({
-//   baseURL: "https://7c4b-177-226-124-12.ngrok-free.app/api",
-//   //baseURL: "https://api.sistemas-ieenayarit.org/api",
+//   //baseURL: "https://6xsxnh48-5472.use.devtunnels.ms/api",
+//   baseURL: "https://api.sistemas-ieenayarit.org/api",
 // });
 // const apiConoceles = axios.create({
 //   baseURL: "https://apiconoceles.sistemas-ieenayarit.org/api",
@@ -64,7 +65,7 @@ api.interceptors.response.use(
     if (error.response.status == 401) {
       alert("Su sesión ha expirado, sera redireccionado al logín");
       window.sessionStorage.clear();
-      window.location = "https://acceso.sistemas-ieenayarit.org";
+      window.location = "http://sistema.ieenayarit.org:9471";
     }
     return Promise.reject();
   }

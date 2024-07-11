@@ -166,6 +166,20 @@
             clickable
             v-ripple
             class="text-grey-8"
+            :to="{ name: 'modelos' }"
+            active-class="text-pink-ieen-1"
+          >
+            <q-item-section avatar>
+              <q-icon name="chevron_right" />
+            </q-item-section>
+
+            <q-item-section> Modelos actas </q-item-section>
+          </q-item>
+          <q-item
+            v-if="CatalogosConList.some((element) => element == 'SCE-CAT-CA')"
+            clickable
+            v-ripple
+            class="text-grey-8"
             :to="{ name: 'voto_anticipado' }"
             active-class="text-pink-ieen-1"
           >
@@ -363,9 +377,9 @@ const show = () => {
     if (action.label == "Cerrar sesión") {
       localStorage.clear();
       sessionStorage.clear();
-      window.location = "https://acceso.sistemas-ieenayarit.org";
+      window.location = "http://sistema.ieenayarit.org:9471";
     } else if (action.label == "Ir a universo") {
-      window.location = `https://acceso.sistemas-ieenayarit.org?key=${encryptStorage.decrypt(
+      window.location = `http://sistema.ieenayarit.org:9471?key=${encryptStorage.decrypt(
         "key"
       )}&UserName=${encryptStorage.decrypt("userNameL")}`;
     } else {

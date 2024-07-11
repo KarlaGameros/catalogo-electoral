@@ -16,6 +16,7 @@ export const useComunesRegistradasStore = defineStore(
         demarcacion_Id: null,
         demarcacion: null,
         voto_Valido_Comun_RP: false,
+        rp: false,
       },
       list_Comunes_Registradas: [],
     }),
@@ -36,6 +37,7 @@ export const useComunesRegistradasStore = defineStore(
         this.comunRegistrada.demarcacion_Id = null;
         this.comunRegistrada.demarcacion = null;
         this.comunRegistrada.voto_Valido_Comun_RP = null;
+        this.comunRegistrada.rp = null;
       },
 
       //----------------------------------------------------------------------
@@ -58,6 +60,7 @@ export const useComunesRegistradasStore = defineStore(
               demarcacion:
                 comun.demarcacion_Id == null ? "N/A" : comun.demarcacion,
               voto_Valido_Comun_RP: comun.voto_Valido_Comun_RP,
+              rp: comun.rp,
             };
           });
         } catch (error) {
@@ -86,6 +89,7 @@ export const useComunesRegistradasStore = defineStore(
               this.comunRegistrada.demarcacion = data.demarcacion;
               this.comunRegistrada.voto_Valido_Comun_RP =
                 data.voto_Valido_Comun_RP;
+              this.comunRegistrada.rp = data.rp;
             }
           }
         } catch (error) {
